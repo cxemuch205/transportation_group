@@ -1,39 +1,61 @@
 package com.maker.transportationgroup;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.ProgressBar;
+
+import com.maker.contenttools.Interfaces.SignInUpCallbacks;
+import com.maker.contenttools.Interfaces.SignInUpCallbacksAdapter;
+import com.maker.transportationgroup.Fragments.SignInFragment;
+import com.maker.transportationgroup.Fragments.SignUpFragment;
 
 
 public class LoginActivity extends ActionBarActivity {
+
+    public static final String TAG = "LoginActivity";
+
+    private ProgressBar pb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        pb = (ProgressBar) findViewById(R.id.pb_load);
+
+        setupFragment(SignInFragment.TAG);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private SignInUpCallbacks fragmentSignInUpCallbacks = new SignInUpCallbacksAdapter() {
+        @Override
+        public void switchToSignIn() {
+            super.switchToSignIn();
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public void switchToSignUp() {
+            super.switchToSignUp();
+        }
+
+        @Override
+        public void enableProgressBar(boolean enable) {
+            super.enableProgressBar(enable);
+        }
+    };
+
+    private void setupFragment(String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (tag.equals(SignInFragment.TAG)) {
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, SignInFragment.getInstance(), tag)
+                    .commit();
+            SignInFragment.getInstance().setFragmentCallbacks(fragmentSignInUpCallbacks);
+        } else if(tag.equals(SignUpFragment.TAG)){
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, SignUpFragment.getInstance(), tag)
+                    .addToBackStack(tag)
+                    .commit();
+            SignUpFragment.getInstance().setFragmentCallbacks(fragmentSignInUpCallbacks);
+        }
     }
 }
