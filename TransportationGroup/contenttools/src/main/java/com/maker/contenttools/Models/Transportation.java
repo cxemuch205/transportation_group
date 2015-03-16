@@ -26,11 +26,20 @@ public class Transportation implements Serializable {
     @SerializedName("current_available_people")
     public int currentAvailablePeople;
 
-    @SerializedName("max_weight_bagage")
+    @SerializedName("max_bagade_weight")
     public float maxWeightBagage;
 
-    @SerializedName("purpose_trip")
+    @SerializedName("purposes")
     public String purposeTrip;
+
+    @SerializedName("car_type_id")
+    public String carTypeId;
+
+    @SerializedName("room_id")
+    public String roomId;
+
+    @SerializedName("owner_id")
+    public String ownerId;
 
     public String cost;
 

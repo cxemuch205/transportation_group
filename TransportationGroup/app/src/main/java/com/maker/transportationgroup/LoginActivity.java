@@ -30,16 +30,28 @@ public class LoginActivity extends ActionBarActivity {
         @Override
         public void switchToSignIn() {
             super.switchToSignIn();
+            setupFragment(SignInFragment.TAG);
         }
 
         @Override
         public void switchToSignUp() {
             super.switchToSignUp();
+            setupFragment(SignUpFragment.TAG);
         }
 
         @Override
-        public void enableProgressBar(boolean enable) {
+        public void enableProgressBar(final boolean enable) {
             super.enableProgressBar(enable);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (enable) {
+                        pb.setVisibility(ProgressBar.VISIBLE);
+                    } else {
+                        pb.setVisibility(ProgressBar.GONE);
+                    }
+                }
+            });
         }
     };
 
@@ -53,7 +65,6 @@ public class LoginActivity extends ActionBarActivity {
         } else if(tag.equals(SignUpFragment.TAG)){
             fragmentManager.beginTransaction()
                     .replace(R.id.container, SignUpFragment.getInstance(), tag)
-                    .addToBackStack(tag)
                     .commit();
             SignUpFragment.getInstance().setFragmentCallbacks(fragmentSignInUpCallbacks);
         }

@@ -9,4 +9,9 @@ public class App {
         public static final String NAME = "transportation_prefs";
         public static final String IS_FIRST_START = "is_first_start";
     }
+
+    public interface Keys {
+        public static final String EMAIL = "email_data";
+        public static final String PASSWORD = "password_data";
+    }
 }

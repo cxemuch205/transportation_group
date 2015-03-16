@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Content Tools</string>
+
+    <string name="email_hint">Введите эл. почту</string>
+    <string name="password_hint">Введите пароль</string>
+    <string name="password_confirmed_hint">Введите пароль повторно</string>
+    <string name="login">Войти</string>
+    <string name="logged">Вход</string>
+    <string name="register">Регистрация</string>
+    <string name="ok">OK</string>
+    <string name="field_no_correct">Не все поля заполнены корректно!</string>
 </resources>
