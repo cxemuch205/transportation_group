@@ -2,6 +2,7 @@ package com.maker.transportationgroup.Fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
+import com.maker.transportationgroup.RoomsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -104,6 +106,9 @@ public class SignInFragment extends Fragment {
             fragmentCallbacks.enableProgressBar(true);
         }
 
+        final String email = etEmail.getText().toString();
+        final String password = etPassword.getText().toString();
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -111,10 +116,20 @@ public class SignInFragment extends Fragment {
                     fragmentCallbacks.enableProgressBar(false);
                 }
                 enableControls(true);
+                if (email.equals("admin@gmail.com")
+                        && password.equals("admin1")) {
+                    openHome();
+                }
             }
         }, 3000);
         //TODO: request to api for logging, after request disable progressbar
 
+    }
+
+    private void openHome() {
+        Intent openHome = new Intent(activity, RoomsActivity.class);
+        startActivity(openHome);
+        activity.finish();
     }
 
     private void enableControls(boolean enable) {

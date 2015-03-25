@@ -1,5 +1,6 @@
 package com.maker.transportationgroup;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
@@ -7,6 +8,7 @@ import android.widget.ProgressBar;
 
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Interfaces.SignInUpCallbacksAdapter;
+import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.Fragments.SignInFragment;
 import com.maker.transportationgroup.Fragments.SignUpFragment;
 
@@ -23,7 +25,11 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login);
         pb = (ProgressBar) findViewById(R.id.pb_load);
 
-        setupFragment(SignInFragment.TAG);
+        if (!Tools.userIsRegistered(this)) {
+            setupFragment(SignInFragment.TAG);
+        } else {
+            openHome();
+        }
     }
 
     private SignInUpCallbacks fragmentSignInUpCallbacks = new SignInUpCallbacksAdapter() {
@@ -54,6 +60,12 @@ public class LoginActivity extends ActionBarActivity {
             });
         }
     };
+
+    private void openHome() {
+        Intent openHome = new Intent(this, RoomsActivity.class);
+        startActivity(openHome);
+        finish();
+    }
 
     private void setupFragment(String tag) {
         FragmentManager fragmentManager = getSupportFragmentManager();
