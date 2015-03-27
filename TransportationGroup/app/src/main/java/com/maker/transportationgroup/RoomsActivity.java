@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.maker.contenttools.Tools;
+
 
 public class RoomsActivity extends ActionBarActivity {
 

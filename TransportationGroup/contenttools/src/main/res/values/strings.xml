@@ -9,4 +9,6 @@
     <string name="register">Регистрация</string>
     <string name="ok">OK</string>
     <string name="field_no_correct">Не все поля заполнены корректно!</string>
+    <string name="register_user_device">Регистрация устройства!</string>
+    <string name="register_successful">Регистрация устройства завершена успешно!</string>
 </resources>

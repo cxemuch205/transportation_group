@@ -1,0 +1,161 @@
+package com.maker.contenttools;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.util.Log;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.maker.contenttools.Constants.App;
+import com.maker.contenttools.Interfaces.GCMHelperCallback;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Created by Daniil on 25-Mar-15.
+ */
+public class GCMHelper {
+
+    public static final String TAG = "GCMHelper";
+
+    private static GCMHelper instance;
+    private Activity activity;
+    private SharedPreferences prefs;
+    private AtomicInteger msgId = new AtomicInteger();
+    private GoogleCloudMessaging gcm;
+    private String regid;
+    private GCMHelperCallback callback;
+
+    public static GCMHelper getInstance(Activity activity) {
+        if (instance == null) {
+            instance = new GCMHelper();
+        }
+        instance.activity = activity;
+        return instance;
+    }
+
+    public void initialUserDevice(GCMHelperCallback callback) {
+        this.callback = callback;
+        prefs = activity.getSharedPreferences(App.Prefs.NAME, Context.MODE_PRIVATE);
+        if (Tools.checkPlayServices(activity)) {
+            gcm = GoogleCloudMessaging.getInstance(activity);
+            regid = getRegistrationId(activity);
+
+            if (regid.isEmpty()) {
+                registerInBackGround();
+            } else {
+                if (callback != null)
+                    callback.onInitSuccess();
+            }
+        } else {
+            if (callback != null)
+                callback.onInitError();
+            Log.e(TAG, "NO Google Play Services");
+        }
+    }
+
+    public static String getRegistrationId(Activity activity) {
+        String registrationId = getInstance(activity)
+                .prefs.getString(App.Prefs.PROPERTY_REG_ID, "");
+        if (registrationId.isEmpty()) {
+            Log.i(TAG, "Registration id not found.");
+            return "";
+        }
+
+        int registeredVersion = getInstance(activity)
+                .prefs.getInt(App.Prefs.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int currentVersion = getAppVersion(activity);
+        if (registeredVersion != currentVersion) {
+            Log.i(TAG, "App version changed.");
+            return "";
+        }
+        return registrationId;
+    }
+
+    public static int getAppVersion(Activity activity) {
+        try {
+            PackageInfo packageInfo = activity.getPackageManager()
+                    .getPackageInfo(activity.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException("Could not get package name: " + e);
+        }
+    }
+
+    private void registerInBackGround() {
+        new AsyncTask<Void, Void, String>() {
+            private ProgressDialog pd;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pd = new ProgressDialog(activity);
+                pd.setMessage(activity.getString(R.string.register_user_device));
+                pd.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(activity);
+                    }
+                    regid = gcm.register(App.APIKeys.SENDER_ID);
+                    msg = "Device registered, registration ID= " + regid;
+
+                    sendRegistrationIdToBackend();
+
+                    storeRegistrationId(activity, regid);
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String o) {
+                super.onPostExecute(o);
+                if (o != null && pd != null) {
+                    final String msg = o;
+                    Log.i(TAG, msg);
+                    pd.setMessage(activity.getString(R.string.register_successful));
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            pd.dismiss();
+                            handler.removeCallbacksAndMessages(this);
+                            if (callback != null) {
+                                if (msg.contains("Error")) {
+                                    callback.onInitError();
+                                } else {
+                                    callback.onInitSuccess();
+                                }
+                            }
+                        }
+                    }, 500);
+                }
+            }
+        }.execute();
+    }
+
+    private void storeRegistrationId(Activity activity, String regId) {
+        int appVersion = getAppVersion(activity);
+        Log.i(TAG, "Saving regId on app version " + appVersion);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(App.Prefs.PROPERTY_REG_ID, regId);
+        editor.putInt(App.Prefs.PROPERTY_APP_VERSION, appVersion);
+        editor.apply();
+    }
+
+    private void sendRegistrationIdToBackend() {
+        //TODO: create request to backend for sending UserDevice RegistrationID
+    }
+}

@@ -81,4 +81,10 @@ public class LoginActivity extends ActionBarActivity {
             SignUpFragment.getInstance().setFragmentCallbacks(fragmentSignInUpCallbacks);
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tools.checkPlayServices(this);
+    }
 }

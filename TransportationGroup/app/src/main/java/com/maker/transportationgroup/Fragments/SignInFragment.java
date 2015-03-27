@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.maker.contenttools.Api.Api;
+import com.maker.contenttools.GCMHelper;
+import com.maker.contenttools.Interfaces.GCMHelperCallback;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
@@ -77,6 +79,9 @@ public class SignInFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         btnLogin.setOnClickListener(clickLoginListener);
         btnRegister.setOnClickListener(clickRegisterListener);
+
+        etEmail.setText("admin@gmail.com");
+        etPassword.setText("admin1");
     }
 
     private View.OnClickListener clickLoginListener = new View.OnClickListener() {
@@ -118,7 +123,17 @@ public class SignInFragment extends Fragment {
                 enableControls(true);
                 if (email.equals("admin@gmail.com")
                         && password.equals("admin1")) {
-                    openHome();
+                    GCMHelper.getInstance(activity).initialUserDevice(new GCMHelperCallback() {
+                        @Override
+                        public void onInitSuccess() {
+                            openHome();
+                        }
+
+                        @Override
+                        public void onInitError() {
+
+                        }
+                    });
                 }
             }
         }, 3000);
