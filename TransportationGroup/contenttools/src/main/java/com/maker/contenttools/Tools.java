@@ -10,7 +10,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Constants.App;
+import com.maker.contenttools.Models.TGUser;
 
 /**
  * Created by Daniil on 13.02.2015.
@@ -53,6 +55,11 @@ public class Tools {
         return prefs.getBoolean(App.Prefs.USER_IS_REGISTERED, false);
     }
 
+    public static void setUserIsRegistered(Context context, boolean userRegistered) {
+        SharedPreferences prefs = context.getSharedPreferences(App.Prefs.NAME, Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(App.Prefs.USER_IS_REGISTERED, userRegistered).apply();
+    }
+
     public static boolean checkPlayServices(Activity activity) {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity);
         if (resultCode != ConnectionResult.SUCCESS) {
@@ -66,5 +73,23 @@ public class Tools {
             return false;
         }
         return true;
+    }
+
+    public static void setUserData(Context context, TGUser user) {
+        SharedPreferences prefs = context.getSharedPreferences(App.Prefs.NAME, Context.MODE_PRIVATE);
+
+        String userData = ApiParser.getGson().toJson(user, TGUser.getTypeToken());
+        prefs.edit().putString(App.Prefs.USER_INFO, userData).apply();
+    }
+
+    public static TGUser getUserData(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(App.Prefs.NAME, Context.MODE_PRIVATE);
+
+        String userData = prefs.getString(App.Prefs.USER_INFO, "");
+        TGUser user = null;
+        if (userData != null && !userData.isEmpty()) {
+            user = ApiParser.getGson().fromJson(userData, TGUser.getTypeToken());
+        }
+        return user;
     }
 }

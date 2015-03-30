@@ -2,21 +2,31 @@ package com.maker.transportationgroup.Fragments;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.maker.contenttools.Api.Api;
+import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
+import com.maker.contenttools.Models.ApiResponse;
+import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
+import com.maker.transportationgroup.RoomsActivity;
+
+import org.json.JSONObject;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -107,7 +117,7 @@ public class SignUpFragment extends Fragment {
             fragmentCallbacks.enableProgressBar(true);
         }
 
-        new Handler().postDelayed(new Runnable() {
+/*        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (fragmentCallbacks != null) {
@@ -115,8 +125,47 @@ public class SignUpFragment extends Fragment {
                 }
                 enableControls(true);
             }
-        }, 3000);
-        //TODO: make request for register, after request login user and disable progressbar
+        }, 3000);*/
+        SignInUp signInUp = new SignInUp();
+        signInUp.email = etEmail.getText().toString();
+        signInUp.password = etPassword.getText().toString();
+        signInUp.passwordConfirmed = etPasswordConfirmed.getText().toString();
+
+        api.requestSignUp(signInUp, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response != null) {
+                    Log.d(TAG, "RESPONSE: " + response);
+                    ApiResponse apiResponse = ApiParser.getGson()
+                            .fromJson(response,
+                                    ApiResponse.getTypeToken());
+                    if (apiResponse != null && apiResponse.isSuccess()) {
+                        openHome();
+                        Tools.setUserIsRegistered(activity, apiResponse.isSuccess());
+                    }
+                }
+
+                if (fragmentCallbacks != null) {
+                    fragmentCallbacks.enableProgressBar(false);
+                }
+                enableControls(true);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Tools.showToastCenter(activity, error.getLocalizedMessage());
+                if (fragmentCallbacks != null) {
+                    fragmentCallbacks.enableProgressBar(false);
+                }
+                enableControls(true);
+            }
+        });
+    }
+
+    private void openHome() {
+        Intent openHome = new Intent(activity, RoomsActivity.class);
+        startActivity(openHome);
+        activity.finish();
     }
 
     private void enableControls(boolean enable) {

@@ -8,19 +8,27 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.maker.contenttools.Api.Api;
+import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.GCMHelper;
 import com.maker.contenttools.Interfaces.GCMHelperCallback;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
+import com.maker.contenttools.Models.ApiResponse;
+import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
 import com.maker.transportationgroup.RoomsActivity;
+
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,8 +88,8 @@ public class SignInFragment extends Fragment {
         btnLogin.setOnClickListener(clickLoginListener);
         btnRegister.setOnClickListener(clickRegisterListener);
 
-        etEmail.setText("admin@gmail.com");
-        etPassword.setText("admin1");
+        /*etEmail.setText("admin@gmail.com");
+        etPassword.setText("admin1");*/
     }
 
     private View.OnClickListener clickLoginListener = new View.OnClickListener() {
@@ -113,7 +121,7 @@ public class SignInFragment extends Fragment {
 
         final String email = etEmail.getText().toString();
         final String password = etPassword.getText().toString();
-
+/*
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -136,9 +144,37 @@ public class SignInFragment extends Fragment {
                     });
                 }
             }
-        }, 3000);
-        //TODO: request to api for logging, after request disable progressbar
+        }, 3000);*/
 
+        SignInUp signInUp = new SignInUp();
+        signInUp.email = email;
+        signInUp.password = password;
+
+        api.requestSignIn(signInUp, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response != null) {
+                    Log.d(TAG, "RESPONSE: " + response);
+                    ApiResponse apiResponse = ApiParser.getGson()
+                            .fromJson(response,
+                                    ApiResponse.getTypeToken());
+                    if (apiResponse != null && apiResponse.isSuccess()) {
+                        openHome();
+                        Tools.setUserIsRegistered(activity, apiResponse.isSuccess());
+                    }
+                }
+
+                if (fragmentCallbacks != null) {
+                    fragmentCallbacks.enableProgressBar(false);
+                }
+                enableControls(true);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
     }
 
     private void openHome() {
