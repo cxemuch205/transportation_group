@@ -13,7 +13,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.maker.transportationgroup.R;
 import com.maker.transportationgroup.Receivers.GcmBroadcastReceiver;
-import com.maker.transportationgroup.RoomsActivity;
+import com.maker.transportationgroup.AddRoomsActivity;
 
 /**
  * Created by Daniil on 25-Mar-15.
@@ -75,7 +75,7 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, RoomsActivity.class), 0);
+                new Intent(this, AddRoomsActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

@@ -2,5 +2,9 @@
 <resources>
 
     <string name="app_name">Transporter</string>
-    <string name="title_activity_roms">Группы</string>
+    <string name="title_activity_rooms">Группы</string>
+    <string name="title_activity_add_room">Добавить группу</string>
+
+    <string name="action_add_room">Добавить группу</string>
+    <string name="action_create_room">Создать группу</string>
 </resources>

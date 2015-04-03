@@ -24,9 +24,9 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 
-public class RoomsActivity extends ActionBarActivity {
+public class AddRoomsActivity extends ActionBarActivity {
 
-    public static final String TAG = "RoomsActivity";
+    public static final String TAG = "AddRoomsActivity";
 
     private ProgressBar pbLoad;
     private ListView lvGroups;
@@ -37,7 +37,7 @@ public class RoomsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rooms);
+        setContentView(R.layout.activity_add_rooms);
         pbLoad = (ProgressBar) findViewById(R.id.pb_load);
         lvGroups = (ListView) findViewById(R.id.lv_list_groups);
         tvMessage = (TextView) findViewById(R.id.tv_message);
@@ -57,13 +57,8 @@ public class RoomsActivity extends ActionBarActivity {
             @Override
             public void run() {
                 if (enable) {
-                    tvMessage.setVisibility(TextView.GONE);
                     pbLoad.setVisibility(ProgressBar.VISIBLE);
                 } else {
-                    if (adapter != null && adapter.isEmpty()) {
-                        tvMessage.setText(R.string.empty_my_rooms);
-                        tvMessage.setVisibility(TextView.VISIBLE);
-                    }
                     pbLoad.setVisibility(ProgressBar.GONE);
                 }
             }
@@ -72,8 +67,7 @@ public class RoomsActivity extends ActionBarActivity {
 
     private void executeLoadRooms() {
         enablePB(true);
-        //TODO: make request my rooms
-        /*api.requestGetRooms(new Response.Listener<JSONArray>() {
+        api.requestGetRooms(new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 if (response != null) {
@@ -96,7 +90,7 @@ public class RoomsActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError error) {
                 enablePB(false);
             }
-        });*/
+        });
     }
 
     private void setupAdapter(ArrayList<TGRoom> rooms) {
@@ -120,7 +114,7 @@ public class RoomsActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_rooms, menu);
+        getMenuInflater().inflate(R.menu.menu_add_room, menu);
         return true;
     }
 
@@ -128,9 +122,10 @@ public class RoomsActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_add_room:
-                Intent addNewGroup = new Intent(this, AddRoomsActivity.class);
-                startActivity(addNewGroup);
+            case R.id.action_create_room:
+                //TODO: make activity, where user can create Group
+                //Intent addNewGroup = new Intent(this, AddRoomsActivity.class);
+                //startActivity(addNewGroup);
                 break;
         }
 

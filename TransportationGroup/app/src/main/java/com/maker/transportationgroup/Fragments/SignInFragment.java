@@ -4,7 +4,6 @@ package com.maker.transportationgroup.Fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -19,16 +18,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
-import com.maker.contenttools.GCMHelper;
-import com.maker.contenttools.Interfaces.GCMHelperCallback;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
-import com.maker.transportationgroup.RoomsActivity;
-
-import org.json.JSONObject;
+import com.maker.transportationgroup.AddRoomsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -178,7 +173,7 @@ public class SignInFragment extends Fragment {
     }
 
     private void openHome() {
-        Intent openHome = new Intent(activity, RoomsActivity.class);
+        Intent openHome = new Intent(activity, AddRoomsActivity.class);
         startActivity(openHome);
         activity.finish();
     }

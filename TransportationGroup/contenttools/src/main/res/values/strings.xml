@@ -14,4 +14,5 @@
     <string name="members">Учасников:</string>
     <string name="id">ИД:</string>
     <string name="news">Новостей:</string>
+    <string name="empty_my_rooms">Нет добавленных групп.</string>
 </resources>

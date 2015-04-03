@@ -3,7 +3,6 @@ package com.maker.transportationgroup.Fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -24,9 +23,7 @@ import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
-import com.maker.transportationgroup.RoomsActivity;
-
-import org.json.JSONObject;
+import com.maker.transportationgroup.AddRoomsActivity;
 
 /**
  * A simple {@link android.app.Fragment} subclass.
@@ -163,7 +160,7 @@ public class SignUpFragment extends Fragment {
     }
 
     private void openHome() {
-        Intent openHome = new Intent(activity, RoomsActivity.class);
+        Intent openHome = new Intent(activity, AddRoomsActivity.class);
         startActivity(openHome);
         activity.finish();
     }
