@@ -1,6 +1,7 @@
 package com.maker.contenttools.Api;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
@@ -11,17 +12,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Models.TGUser;
 import com.maker.contenttools.Tools;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,30 +32,33 @@ public class Api {
     public static final String TAG = "Api";
 
     public interface Methods {
+
         public static final String[] SIGN_UP = {"auth"};
         public static final String[] SIGN_IN = {"auth", "sign_in"};
         public static final String[] SIGN_OUT = {"auth", "sign_out"};
-        public static final String[] ROOMS = {"api", "rooms"};
+        public static final String[] GROUPS = {"api", "groups"};
+        public static final String[] MY_GROUPS = {"api", "groups", "own"};
+        public static final String[] SEARCH_GROUPS = {"api", "groups", "search"};
     }
-
     public interface Fields {
+
         public static final String EMAIL = "email";
         public static final String PASSWORD = "password";
         public static final String PASSWORD_CONFIRMATION = "password_confirmation";
         public static final String ACCESS_TOKEN = "access-token";
         public static final String CLIENT = "client";
         public static final String UID = "uid";
+        public static final String QUERY = "q";
     }
-
     public interface HeaderKeys {
+
         public static final String UID = "Uid";
         public static final String CLIENT = "Client";
         public static final String ACCESS_TOKEN = "Access-Token";
     }
-
     private Context context;
-    private RequestQueue requestQueue;
 
+    private RequestQueue requestQueue;
     public Api(Context context) {
         this.context = context;
         requestQueue = Volley.newRequestQueue(context);
@@ -78,7 +79,7 @@ public class Api {
             }
         }
 
-        return builder.build().toString();
+        return builder.build().toString().replace("%3A", ":");
     }
 
     public void requestSignUp(final SignInUp data, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
@@ -192,8 +193,8 @@ public class Api {
         }
     }
 
-    public void requestGetRooms(Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
-        String url = buildUrl(Methods.ROOMS, null);
+    public void requestGetGroups(Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
+        String url = buildUrl(Methods.GROUPS, null);
         Log.i(TAG, url);
 
         JsonArrayRequest request = new JsonArrayRequest(url, responseListener, errorListener) {
@@ -206,5 +207,46 @@ public class Api {
         };
         request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
         requestQueue.add(request);
+    }
+
+    public void requestGetMyGroups(Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
+        String url = buildUrl(Methods.MY_GROUPS, null);
+        Log.i(TAG, url);
+
+        JsonArrayRequest request = new JsonArrayRequest(url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
+    }
+
+    public void requestSearchGroups(String text, Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
+        HashMap<String, String> data = new HashMap<String, String>();
+        data.put(Fields.QUERY, text);
+        String url = buildUrl(Methods.MY_GROUPS, data);
+        Log.i(TAG, url);
+
+        JsonArrayRequest request = new JsonArrayRequest(url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
+    }
+
+    public void requestAddRoom(Intent data, Response.Listener<String> successListener, Response.ErrorListener errorListener) {
+        String password = data.getStringExtra(App.Keys.PASSWORD);
+        String idRoom = data.getStringExtra(App.Keys.ID);
+        //TODO: make request for addroom by id and password to my list rooms
+
     }
 }

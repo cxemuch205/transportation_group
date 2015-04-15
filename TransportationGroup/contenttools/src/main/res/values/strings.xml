@@ -8,6 +8,7 @@
     <string name="logged">Вход</string>
     <string name="register">Регистрация</string>
     <string name="ok">OK</string>
+    <string name="cancel">ОТМЕНА</string>
     <string name="field_no_correct">Не все поля заполнены корректно!</string>
     <string name="register_user_device">Регистрация устройства!</string>
     <string name="register_successful">Регистрация устройства завершена успешно!</string>
@@ -15,4 +16,7 @@
     <string name="id">ИД:</string>
     <string name="news">Новостей:</string>
     <string name="empty_my_rooms">Нет добавленных групп.</string>
+    <string name="title_dialog_auth_room">Подключение к %s</string>
+    <string name="hint_password">Введите пароль</string>
+    <string name="emty_field">Не все поля заполнены</string>
 </resources>

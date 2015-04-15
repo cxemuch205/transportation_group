@@ -1,17 +1,26 @@
 package com.maker.contenttools;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Constants.App;
+import com.maker.contenttools.Interfaces.OnDialogListener;
+import com.maker.contenttools.Models.TGGroup;
 import com.maker.contenttools.Models.TGUser;
 
 /**
@@ -91,5 +100,68 @@ public class Tools {
             user = ApiParser.getGson().fromJson(userData, TGUser.getTypeToken());
         }
         return user;
+    }
+
+    public static Dialog buildDialogAuthRoom(final Activity activity, final TGGroup room, final OnDialogListener dialogListener) {
+        final Dialog dialog = new Dialog(activity);
+
+        dialog.setContentView(R.layout.dialog_auth_room);
+        final TextView tvName = (TextView) dialog.findViewById(R.id.tv_name);
+        final EditText etPassword = (EditText) dialog.findViewById(R.id.et_password);
+        final Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
+        final Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface d) {
+                if (dialogListener != null) {
+                    dialogListener.onShow(dialog);
+                }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface d) {
+                if (dialogListener != null) {
+                    dialogListener.onDismiss(dialog);
+                }
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogListener != null) {
+                    dialogListener.onCancel(null);
+                }
+                dialog.cancel();
+            }
+        });
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dialogListener != null) {
+                    if (etPassword.getText().length() > 0) {
+                        Intent data = new Intent();
+                        data.putExtra(App.Keys.PASSWORD, etPassword.getText().toString());
+                        data.putExtra(App.Keys.ID, room.id);
+
+                        dialogListener.onOK(data);
+                        dialog.cancel();
+                    } else {
+                        showToastCenter(activity, activity.getString(R.string.emty_field));
+                    }
+                }
+            }
+        });
+
+        if (dialogListener != null) {
+            tvName.setText(String.format(activity.getString(R.string.title_dialog_auth_room),
+                    room.name));
+        }
+
+        return dialog;
     }
 }

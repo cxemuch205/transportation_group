@@ -7,7 +7,7 @@ public class App {
 
     public interface Api{
         public static final String SCHEME = "http";
-        public static final String AUTHORITY = "aostroumov.dev.positrace.com";
+        public static final String AUTHORITY = "46.101.15.191:80";
     }
 
     public interface Prefs{
@@ -22,6 +22,7 @@ public class App {
     public interface Keys {
         public static final String EMAIL = "email_data";
         public static final String PASSWORD = "password_data";
+        public static final String ID = "id_data";
     }
 
     public interface APIKeys {

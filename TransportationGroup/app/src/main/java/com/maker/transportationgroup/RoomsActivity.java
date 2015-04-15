@@ -17,7 +17,7 @@ import com.android.volley.VolleyError;
 import com.maker.contenttools.Adapters.RoomsAdapter;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
-import com.maker.contenttools.Models.TGRoom;
+import com.maker.contenttools.Models.TGGroup;
 
 import org.json.JSONArray;
 
@@ -72,13 +72,12 @@ public class RoomsActivity extends ActionBarActivity {
 
     private void executeLoadRooms() {
         enablePB(true);
-        //TODO: make request my rooms
-        /*api.requestGetRooms(new Response.Listener<JSONArray>() {
+        api.requestGetMyGroups(new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 if (response != null) {
                     Log.i(TAG, "RESPONSE: " + response);
-                    final ArrayList<TGRoom> rooms = ApiParser.getGson().fromJson(String.valueOf(response), TGRoom.getArrayTypeToken());
+                    final ArrayList<TGGroup> rooms = ApiParser.getGson().fromJson(String.valueOf(response), TGGroup.getArrayTypeToken());
                     if (rooms != null) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -96,10 +95,10 @@ public class RoomsActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError error) {
                 enablePB(false);
             }
-        });*/
+        });
     }
 
-    private void setupAdapter(ArrayList<TGRoom> rooms) {
+    private void setupAdapter(ArrayList<TGGroup> rooms) {
         if (adapter == null) {
             adapter = new RoomsAdapter(this, rooms);
         } else {

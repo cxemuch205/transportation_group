@@ -82,9 +82,6 @@ public class SignInFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         btnLogin.setOnClickListener(clickLoginListener);
         btnRegister.setOnClickListener(clickRegisterListener);
-
-        /*etEmail.setText("admin@gmail.com");
-        etPassword.setText("admin1");*/
     }
 
     private View.OnClickListener clickLoginListener = new View.OnClickListener() {
@@ -116,30 +113,6 @@ public class SignInFragment extends Fragment {
 
         final String email = etEmail.getText().toString();
         final String password = etPassword.getText().toString();
-/*
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (fragmentCallbacks != null) {
-                    fragmentCallbacks.enableProgressBar(false);
-                }
-                enableControls(true);
-                if (email.equals("admin@gmail.com")
-                        && password.equals("admin1")) {
-                    GCMHelper.getInstance(activity).initialUserDevice(new GCMHelperCallback() {
-                        @Override
-                        public void onInitSuccess() {
-                            openHome();
-                        }
-
-                        @Override
-                        public void onInitError() {
-
-                        }
-                    });
-                }
-            }
-        }, 3000);*/
 
         SignInUp signInUp = new SignInUp();
         signInUp.email = email;
@@ -167,7 +140,10 @@ public class SignInFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                enableControls(true);
+                if (fragmentCallbacks != null) {
+                    fragmentCallbacks.enableProgressBar(false);
+                }
             }
         });
     }

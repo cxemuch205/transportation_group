@@ -5,12 +5,11 @@ import com.google.gson.reflect.TypeToken;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Daniil on 30-Mar-15.
  */
-public class TGRoom implements Serializable {
+public class TGGroup implements Serializable {
 
     public int id;
     public String name;
@@ -22,6 +21,6 @@ public class TGRoom implements Serializable {
     public String updated_at;
 
     public static Type getArrayTypeToken(){
-        return new TypeToken<ArrayList<TGRoom>>(){}.getType();
+        return new TypeToken<ArrayList<TGGroup>>(){}.getType();
     }
 }

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.maker.contenttools.Models.TGRoom;
+import com.maker.contenttools.Models.TGGroup;
 import com.maker.contenttools.R;
 
 import java.util.ArrayList;
@@ -17,12 +17,12 @@ import java.util.ArrayList;
 /**
  * Created by Daniil on 30-Mar-15.
  */
-public class RoomsAdapter extends ArrayAdapter<TGRoom> {
+public class RoomsAdapter extends ArrayAdapter<TGGroup> {
 
     private Context context;
-    private ArrayList<TGRoom> data;
+    private ArrayList<TGGroup> data;
 
-    public RoomsAdapter(Context context, ArrayList<TGRoom> data) {
+    public RoomsAdapter(Context context, ArrayList<TGGroup> data) {
         super(context, R.layout.item_room, data);
         this.context = context;
         this.data = data;
@@ -47,7 +47,7 @@ public class RoomsAdapter extends ArrayAdapter<TGRoom> {
             holder = (ViewHolder) view.getTag();
         }
 
-        TGRoom item = data.get(position);
+        TGGroup item = data.get(position);
         holder.tvName.setText(item.name);
         holder.tvId.setText(context.getString(R.string.id) + " " + String.valueOf(item.id));
         holder.tvDescription.setText(item.description);
