@@ -110,7 +110,7 @@ public class GCMHelper {
                     regid = gcm.register(App.APIKeys.SENDER_ID);
                     msg = "Device registered, registration ID= " + regid;
 
-                    sendRegistrationIdToBackend();
+                    sendRegistrationIdToBackend(regid);
 
                     storeRegistrationId(activity, regid);
                 } catch (IOException ex) {
@@ -155,7 +155,10 @@ public class GCMHelper {
         editor.apply();
     }
 
-    private void sendRegistrationIdToBackend() {
-        //TODO: create request to backend for sending UserDevice RegistrationID
+    private void sendRegistrationIdToBackend(String regId) {
+        if (regId != null && !regId.isEmpty()) {
+            //TODO: create request to backend for sending UserDevice RegistrationID
+
+        }
     }
 }

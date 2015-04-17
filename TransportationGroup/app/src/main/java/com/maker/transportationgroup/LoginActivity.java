@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ProgressBar;
 
+import com.maker.contenttools.GCMHelper;
+import com.maker.contenttools.Interfaces.GCMHelperCallback;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Interfaces.SignInUpCallbacksAdapter;
 import com.maker.contenttools.Tools;
@@ -24,6 +26,19 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         pb = (ProgressBar) findViewById(R.id.pb_load);
+
+        //TODO: initial GCM start send reg id by device to backend
+        /*GCMHelper.getInstance(this).initialUserDevice(new GCMHelperCallback() {
+            @Override
+            public void onInitSuccess() {
+
+            }
+
+            @Override
+            public void onInitError() {
+
+            }
+        });*/
 
         if (!Tools.userIsRegistered(this)) {
             setupFragment(SignInFragment.TAG);
