@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.maker.contenttools.Adapters.RoomsAdapter;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
+import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Models.TGGroup;
 
 import org.json.JSONArray;
@@ -43,9 +44,6 @@ public class RoomsActivity extends ActionBarActivity {
         tvMessage = (TextView) findViewById(R.id.tv_message);
 
         api = new Api(this);
-
-        executeLoadRooms();
-        initListeners();
     }
 
     private void initListeners() {
@@ -113,7 +111,12 @@ public class RoomsActivity extends ActionBarActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             //TODO: open room if user have permission for this room or user, put password for this room
-
+            TGGroup group = adapter.getItem(position);
+            if (group != null) {
+                /*Intent openListTrips = new Intent(RoomsActivity.this, TripsActivity.class);
+                openListTrips.putExtra(App.Keys.ID, group.id);
+                startActivity(openListTrips);*/
+            }
         }
     };
 
@@ -134,5 +137,12 @@ public class RoomsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        executeLoadRooms();
+        initListeners();
     }
 }

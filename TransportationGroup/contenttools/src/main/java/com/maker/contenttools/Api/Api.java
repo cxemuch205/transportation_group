@@ -37,6 +37,7 @@ public class Api {
         public static final String[] SIGN_IN = {"auth", "sign_in"};
         public static final String[] SIGN_OUT = {"auth", "sign_out"};
         public static final String[] GROUPS = {"api", "groups"};
+        public static final String[] JOIN_TO_GROUP = {"api", "groups", ":id", "join"};
         public static final String[] MY_GROUPS = {"api", "groups", "own"};
         public static final String[] SEARCH_GROUPS = {"api", "groups", "search"};
     }
@@ -245,10 +246,37 @@ public class Api {
     }
 
     public void requestAddGroup(Intent data, Response.Listener<String> successListener, Response.ErrorListener errorListener) {
-        String password = data.getStringExtra(App.Keys.PASSWORD);
-        String idRoom = data.getStringExtra(App.Keys.ID);
-        //TODO: make request for addroom by id and password to my list rooms
+        final String password = data.getStringExtra(App.Keys.PASSWORD);
+        int idRoom = data.getIntExtra(App.Keys.ID, -1);
 
+        String url = buildUrl(Methods.JOIN_TO_GROUP, null);
+        if (idRoom > -1) {
+            url = url.replace(":id", String.valueOf(idRoom));
+        } else {
+            errorListener.onErrorResponse(null);
+            return;
+        }
+        Log.i(TAG, url);
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, successListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                if (password != null) {
+                    params.put(Fields.PASSWORD, password);
+                }
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
     }
 
     public void requestCreateGroup(Intent data, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {

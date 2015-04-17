@@ -43,6 +43,7 @@ public class AddRoomsActivity extends ActionBarActivity {
     private EditText etTextSearch;
     private RoomsAdapter adapter;
     private Api api;
+    private Dialog dialogAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +159,6 @@ public class AddRoomsActivity extends ActionBarActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         });
     }
@@ -168,7 +168,7 @@ public class AddRoomsActivity extends ActionBarActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             TGGroup room = adapter.getItem(position);
             if (room != null) {
-                Dialog dialogAuth = Tools.buildDialogAuthRoom(AddRoomsActivity.this, room, dialogCallback);
+                dialogAuth = Tools.buildDialogAuthRoom(AddRoomsActivity.this, room, dialogCallback);
                 dialogAuth.show();
             }
         }
@@ -186,7 +186,7 @@ public class AddRoomsActivity extends ActionBarActivity {
         @Override
         public void onCancel(Intent data) {
             super.onCancel(data);
-
+            dialogAuth = null;
         }
     };
 
@@ -195,21 +195,44 @@ public class AddRoomsActivity extends ActionBarActivity {
 
             @Override
             public void onResponse(String response) {
-                //TODO: parse response by add new room to myRooms list, if password no correct reshow dialog for put new password
+                Log.d(TAG, "RESPONSE ADD: \n" + response);
+                if (response != null && !response.isEmpty()) {
+                    Tools.showToastCenter(AddRoomsActivity.this, getString(R.string.added));
+                }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                try {
-                    String response = new String(error.networkResponse.data);
-                    ApiResponse apiResponse = ApiParser.getGson()
-                            .fromJson(response,
-                                    ApiResponse.getTypeToken());
-                    if (apiResponse != null) {
-                        Tools.showToastCenter(AddRoomsActivity.this, apiResponse.errors.full_messages.get(0));
+                if (error != null) {
+                    try {
+                        String response = new String(error.networkResponse.data);
+                        Log.d(TAG, "RESPONSE ERROR: " + response);
+                        ApiResponse apiResponse = ApiParser.getGson()
+                                .fromJson(response,
+                                        ApiResponse.getTypeToken());
+                        if (apiResponse != null && apiResponse.errors != null) {
+                            if (apiResponse.errors.full_messages != null) {
+                                Tools.showToastCenter(AddRoomsActivity.this,
+                                        Tools.convertArrayToString(apiResponse.errors.full_messages));
+                            } else {
+                                Tools.showToastCenter(AddRoomsActivity.this, apiResponse.errors.password);
+                                if (apiResponse.errors.password != null
+                                        && !apiResponse.errors.password.isEmpty()
+                                        && apiResponse.errors.password.equals("incorrect")
+                                        && dialogAuth != null) {
+                                    dialogAuth.show();
+                                } else {
+                                    dialogAuth = null;
+                                }
+                            }
+                        } else {
+                            dialogAuth = null;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {}
+                }
             }
         });
     }

@@ -53,7 +53,7 @@
             android:id="@+id/tv_number_of_members"
             android:layout_gravity="right"
             android:gravity="center_vertical|right"
-            android:layout_weight="2.5" />
+            android:layout_weight="1.5" />
     </LinearLayout>
 
     <TextView

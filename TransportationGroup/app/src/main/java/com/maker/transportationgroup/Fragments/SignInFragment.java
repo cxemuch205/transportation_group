@@ -141,7 +141,6 @@ public class SignInFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "OPER 1##: " + error.networkResponse.headers);
                 try {
                     String response = new String(error.networkResponse.data);
                     ApiResponse apiResponse = ApiParser.getGson()

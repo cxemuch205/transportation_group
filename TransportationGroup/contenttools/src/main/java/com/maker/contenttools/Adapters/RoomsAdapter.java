@@ -53,7 +53,7 @@ public class RoomsAdapter extends ArrayAdapter<TGGroup> {
         holder.tvDescription.setText(item.description);
         holder.tvNumberOfMembers.setText(context.getString(R.string.members) + " "
                 + String.valueOf(item.numberOfMembers));
-        holder.tvNumberOfMembers.setText(context.getString(R.string.news) + " "
+        holder.tvNumberOfNews.setText(context.getString(R.string.news) + " "
                 + String.valueOf(item.numberOfNews));
 
         return view;
