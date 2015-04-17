@@ -49,12 +49,15 @@ public class Api {
         public static final String CLIENT = "client";
         public static final String UID = "uid";
         public static final String QUERY = "q";
+        public static final String GROUP_NAME = "group[name]";
+        public static final String GROUP_PASSWORD = "group[password]";
+        public static final String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
     }
     public interface HeaderKeys {
 
-        public static final String UID = "Uid";
-        public static final String CLIENT = "Client";
-        public static final String ACCESS_TOKEN = "Access-Token";
+        public static final String UID = "uid";
+        public static final String CLIENT = "client";
+        public static final String ACCESS_TOKEN = "access-token";
     }
     private Context context;
 
@@ -115,7 +118,6 @@ public class Api {
                         params.put(Fields.PASSWORD_CONFIRMATION, data.passwordConfirmed);
                     }
                 }
-                Log.d(TAG, "PARAMS: \n" + params);
                 return params;
             }
         };
@@ -153,11 +155,10 @@ public class Api {
                         params.put(Fields.PASSWORD, data.password);
                     }
                 }
-                Log.d(TAG, "PARAMS: \n" + params);
                 return params;
             }
         };
-        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 3, 1f));
         requestQueue.add(request);
     }
 
@@ -193,11 +194,11 @@ public class Api {
         }
     }
 
-    public void requestGetGroups(Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
+    public void requestGetGroups(Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
         String url = buildUrl(Methods.GROUPS, null);
         Log.i(TAG, url);
 
-        JsonArrayRequest request = new JsonArrayRequest(url, responseListener, errorListener) {
+        StringRequest request = new StringRequest(Request.Method.GET, url, responseListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -209,11 +210,11 @@ public class Api {
         requestQueue.add(request);
     }
 
-    public void requestGetMyGroups(Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
+    public void requestGetMyGroups(Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
         String url = buildUrl(Methods.MY_GROUPS, null);
         Log.i(TAG, url);
 
-        JsonArrayRequest request = new JsonArrayRequest(url, responseListener, errorListener) {
+        StringRequest request = new StringRequest(Request.Method.GET, url, responseListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -225,13 +226,13 @@ public class Api {
         requestQueue.add(request);
     }
 
-    public void requestSearchGroups(String text, Response.Listener<JSONArray> responseListener, Response.ErrorListener errorListener) {
+    public void requestSearchGroups(String text, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put(Fields.QUERY, text);
-        String url = buildUrl(Methods.MY_GROUPS, data);
+        String url = buildUrl(Methods.SEARCH_GROUPS, data);
         Log.i(TAG, url);
 
-        JsonArrayRequest request = new JsonArrayRequest(url, responseListener, errorListener) {
+        StringRequest request = new StringRequest(Request.Method.GET, url, responseListener, errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -239,14 +240,49 @@ public class Api {
                 return headers;
             }
         };
-        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 2, 1f));
         requestQueue.add(request);
     }
 
-    public void requestAddRoom(Intent data, Response.Listener<String> successListener, Response.ErrorListener errorListener) {
+    public void requestAddGroup(Intent data, Response.Listener<String> successListener, Response.ErrorListener errorListener) {
         String password = data.getStringExtra(App.Keys.PASSWORD);
         String idRoom = data.getStringExtra(App.Keys.ID);
         //TODO: make request for addroom by id and password to my list rooms
 
+    }
+
+    public void requestCreateGroup(Intent data, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
+        final String name = data.getStringExtra(App.Keys.NAME);
+        final String password = data.getStringExtra(App.Keys.PASSWORD);
+        final String passwordConfirmed = data.getStringExtra(App.Keys.PASSWORD_CONFIGURED);
+
+        String url = buildUrl(Methods.GROUPS, null);
+        Log.i(TAG, url);
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                if (name != null) {
+                    params.put(Fields.GROUP_NAME, name);
+                }
+                if (password != null) {
+                    params.put(Fields.GROUP_PASSWORD, password);
+                }
+                if (passwordConfirmed != null) {
+                    params.put(Fields.GROUP_PASSWORD_CONFIRMED, passwordConfirmed);
+                }
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
     }
 }

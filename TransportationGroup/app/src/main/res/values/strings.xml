@@ -7,4 +7,6 @@
 
     <string name="action_add_room">Добавить группу</string>
     <string name="action_create_room">Создать группу</string>
+    <string name="title_activity_create_room">Создание группы</string>
+
 </resources>

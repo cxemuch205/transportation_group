@@ -1,7 +1,7 @@
 package com.maker.contenttools;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +22,8 @@ import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Interfaces.OnDialogListener;
 import com.maker.contenttools.Models.TGGroup;
 import com.maker.contenttools.Models.TGUser;
+
+import java.util.ArrayList;
 
 /**
  * Created by Daniil on 13.02.2015.
@@ -102,14 +104,46 @@ public class Tools {
         return user;
     }
 
-    public static Dialog buildDialogAuthRoom(final Activity activity, final TGGroup room, final OnDialogListener dialogListener) {
-        final Dialog dialog = new Dialog(activity);
+    public static AlertDialog buildDialogAuthRoom(final Activity activity, final TGGroup room, final OnDialogListener dialogListener) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
 
-        dialog.setContentView(R.layout.dialog_auth_room);
-        final TextView tvName = (TextView) dialog.findViewById(R.id.tv_name);
-        final EditText etPassword = (EditText) dialog.findViewById(R.id.et_password);
-        final Button btnCancel = (Button) dialog.findViewById(R.id.btn_cancel);
-        final Button btnOk = (Button) dialog.findViewById(R.id.btn_ok);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_auth_room, null);
+
+        final TextView tvName = (TextView) dialogView.findViewById(R.id.tv_name);
+        final EditText etPassword = (EditText) dialogView.findViewById(R.id.et_password);
+
+        dialogBuilder.setView(dialogView);
+
+        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialogListener != null) {
+                    if (etPassword.getText().length() > 0) {
+                        Intent data = new Intent();
+                        data.putExtra(App.Keys.PASSWORD, etPassword.getText().toString());
+                        data.putExtra(App.Keys.ID, room.id);
+
+                        dialogListener.onOK(data);
+                        dialog.cancel();
+                    } else {
+                        showToastCenter(activity, activity.getString(R.string.empty_field));
+                    }
+                }
+            }
+        });
+
+        dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (dialogListener != null) {
+                    dialogListener.onCancel(null);
+                }
+                dialog.cancel();
+            }
+        });
+
+        final AlertDialog dialog = dialogBuilder.create();
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -129,39 +163,19 @@ public class Tools {
             }
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dialogListener != null) {
-                    dialogListener.onCancel(null);
-                }
-                dialog.cancel();
-            }
-        });
-
-        btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dialogListener != null) {
-                    if (etPassword.getText().length() > 0) {
-                        Intent data = new Intent();
-                        data.putExtra(App.Keys.PASSWORD, etPassword.getText().toString());
-                        data.putExtra(App.Keys.ID, room.id);
-
-                        dialogListener.onOK(data);
-                        dialog.cancel();
-                    } else {
-                        showToastCenter(activity, activity.getString(R.string.emty_field));
-                    }
-                }
-            }
-        });
-
         if (dialogListener != null) {
             tvName.setText(String.format(activity.getString(R.string.title_dialog_auth_room),
                     room.name));
         }
 
         return dialog;
+    }
+
+    public static String convertArrayToString(ArrayList<String> fullMessages) {
+        String result = "";
+        for (String s : fullMessages) {
+            result += (s+"\n");
+        }
+        return result;
     }
 }

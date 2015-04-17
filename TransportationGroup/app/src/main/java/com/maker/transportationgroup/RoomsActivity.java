@@ -72,12 +72,12 @@ public class RoomsActivity extends ActionBarActivity {
 
     private void executeLoadRooms() {
         enablePB(true);
-        api.requestGetMyGroups(new Response.Listener<JSONArray>() {
+        api.requestGetMyGroups(new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 if (response != null) {
                     Log.i(TAG, "RESPONSE: " + response);
-                    final ArrayList<TGGroup> rooms = ApiParser.getGson().fromJson(String.valueOf(response), TGGroup.getArrayTypeToken());
+                    final ArrayList<TGGroup> rooms = ApiParser.getGson().fromJson(response, TGGroup.getArrayTypeToken());
                     if (rooms != null) {
                         runOnUiThread(new Runnable() {
                             @Override

@@ -21,7 +21,9 @@ public class App {
 
     public interface Keys {
         public static final String EMAIL = "email_data";
+        public static final String NAME = "name_data";
         public static final String PASSWORD = "password_data";
+        public static final String PASSWORD_CONFIGURED = "password_confirmed_data";
         public static final String ID = "id_data";
     }
 

@@ -24,6 +24,7 @@ import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
 import com.maker.transportationgroup.AddRoomsActivity;
+import com.maker.transportationgroup.RoomsActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -140,6 +141,17 @@ public class SignInFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "OPER 1##: " + error.networkResponse.headers);
+                try {
+                    String response = new String(error.networkResponse.data);
+                    ApiResponse apiResponse = ApiParser.getGson()
+                            .fromJson(response,
+                                    ApiResponse.getTypeToken());
+                    if (apiResponse != null) {
+                        Tools.showToastCenter(activity,
+                                Tools.convertArrayToString(apiResponse.errors.full_messages));
+                    }
+                } catch (Exception e) {}
                 enableControls(true);
                 if (fragmentCallbacks != null) {
                     fragmentCallbacks.enableProgressBar(false);
@@ -149,7 +161,7 @@ public class SignInFragment extends Fragment {
     }
 
     private void openHome() {
-        Intent openHome = new Intent(activity, AddRoomsActivity.class);
+        Intent openHome = new Intent(activity, RoomsActivity.class);
         startActivity(openHome);
         activity.finish();
     }

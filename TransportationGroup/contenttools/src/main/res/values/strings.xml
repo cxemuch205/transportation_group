@@ -2,12 +2,14 @@
     <string name="app_name">Content Tools</string>
 
     <string name="email_hint">Введите эл. почту</string>
+    <string name="name_hint">Введите имя группы</string>
     <string name="password_hint">Введите пароль</string>
     <string name="password_confirmed_hint">Введите пароль повторно</string>
     <string name="login">Войти</string>
     <string name="logged">Вход</string>
     <string name="register">Регистрация</string>
     <string name="ok">OK</string>
+    <string name="create">СОЗДАТЬ</string>
     <string name="cancel">ОТМЕНА</string>
     <string name="field_no_correct">Не все поля заполнены корректно!</string>
     <string name="register_user_device">Регистрация устройства!</string>
@@ -18,5 +20,6 @@
     <string name="empty_my_rooms">Нет добавленных групп.</string>
     <string name="title_dialog_auth_room">Подключение к %s</string>
     <string name="hint_password">Введите пароль</string>
-    <string name="emty_field">Не все поля заполнены</string>
+    <string name="empty_field">Не все поля заполнены</string>
+    <string name="create_group_successful">Группа создана успешно!</string>
 </resources>

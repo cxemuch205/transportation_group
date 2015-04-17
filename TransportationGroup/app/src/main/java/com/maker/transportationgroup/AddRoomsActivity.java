@@ -23,6 +23,7 @@ import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Interfaces.OnDialogAdapter;
 import com.maker.contenttools.Interfaces.OnDialogListener;
+import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.TGGroup;
 import com.maker.contenttools.Tools;
 
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 public class AddRoomsActivity extends ActionBarActivity {
 
     public static final String TAG = "AddRoomsActivity";
+    private static final int REQUEST_CREATE_GROUP = 102;
 
     private ProgressBar pbLoad;
     private ListView lvGroups;
@@ -79,12 +81,12 @@ public class AddRoomsActivity extends ActionBarActivity {
 
     private void executeLoadRooms() {
         enablePB(true);
-        api.requestGetGroups(new Response.Listener<JSONArray>() {
+        api.requestGetGroups(new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 if (response != null) {
                     Log.i(TAG, "RESPONSE: " + response);
-                    final ArrayList<TGGroup> rooms = ApiParser.getGson().fromJson(String.valueOf(response), TGGroup.getArrayTypeToken());
+                    final ArrayList<TGGroup> rooms = ApiParser.getGson().fromJson(response, TGGroup.getArrayTypeToken());
                     if (rooms != null) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -138,11 +140,11 @@ public class AddRoomsActivity extends ActionBarActivity {
     };
 
     private void existSearch(String text) {
-        api.requestSearchGroups(text, new Response.Listener<JSONArray>() {
+        api.requestSearchGroups(text, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(String response) {
                 if (response != null && response.length() > 0) {
-                    final ArrayList<TGGroup> tgGroups = ApiParser.getGson().fromJson(String.valueOf(response), TGGroup.getArrayTypeToken());
+                    final ArrayList<TGGroup> tgGroups = ApiParser.getGson().fromJson(response, TGGroup.getArrayTypeToken());
                     if (tgGroups != null) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -164,7 +166,6 @@ public class AddRoomsActivity extends ActionBarActivity {
     private AdapterView.OnItemClickListener itemRoomClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //TODO: open room if user have permission for this room or user, put password for this room
             TGGroup room = adapter.getItem(position);
             if (room != null) {
                 Dialog dialogAuth = Tools.buildDialogAuthRoom(AddRoomsActivity.this, room, dialogCallback);
@@ -190,17 +191,25 @@ public class AddRoomsActivity extends ActionBarActivity {
     };
 
     private void requestAddRoom(Intent data) {
-        api.requestAddRoom(data, new Response.Listener<String>() {
+        api.requestAddGroup(data, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
                 //TODO: parse response by add new room to myRooms list, if password no correct reshow dialog for put new password
             }
-        }, new Response.ErrorListener(){
+        }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                try {
+                    String response = new String(error.networkResponse.data);
+                    ApiResponse apiResponse = ApiParser.getGson()
+                            .fromJson(response,
+                                    ApiResponse.getTypeToken());
+                    if (apiResponse != null) {
+                        Tools.showToastCenter(AddRoomsActivity.this, apiResponse.errors.full_messages.get(0));
+                    }
+                } catch (Exception e) {}
             }
         });
     }
@@ -216,9 +225,8 @@ public class AddRoomsActivity extends ActionBarActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_create_room:
-                //TODO: make activity, where user can create Group
-                //Intent createNewGroup = new Intent(this, CreateRoomActivity.class);
-                //startActivity(createNewGroup);
+                Intent createNewGroup = new Intent(this, CreateRoomActivity.class);
+                startActivityForResult(createNewGroup, REQUEST_CREATE_GROUP);
                 break;
             case android.R.id.home:
                 finish();
@@ -226,5 +234,13 @@ public class AddRoomsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CREATE_GROUP && resultCode == RESULT_OK) {
+            executeLoadRooms();
+        }
     }
 }
