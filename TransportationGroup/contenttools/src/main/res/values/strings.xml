@@ -23,4 +23,5 @@
     <string name="empty_field">Не все поля заполнены</string>
     <string name="create_group_successful">Группа создана успешно!</string>
     <string name="added">Добавлено!</string>
+    <string name="search_hint">Введите имя или ид группы</string>
 </resources>

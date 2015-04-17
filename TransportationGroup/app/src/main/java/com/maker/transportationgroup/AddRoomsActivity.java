@@ -27,8 +27,6 @@ import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.TGGroup;
 import com.maker.contenttools.Tools;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 
 
@@ -37,7 +35,7 @@ public class AddRoomsActivity extends ActionBarActivity {
     public static final String TAG = "AddRoomsActivity";
     private static final int REQUEST_CREATE_GROUP = 102;
 
-    private ProgressBar pbLoad;
+    private ProgressBar pbLoad, pbExecute;
     private ListView lvGroups;
     private TextView tvMessage;
     private EditText etTextSearch;
@@ -50,6 +48,7 @@ public class AddRoomsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_rooms);
         pbLoad = (ProgressBar) findViewById(R.id.pb_load);
+        pbExecute = (ProgressBar) findViewById(R.id.pb_execute);
         lvGroups = (ListView) findViewById(R.id.lv_list_groups);
         tvMessage = (TextView) findViewById(R.id.tv_message);
         etTextSearch = (EditText) findViewById(R.id.et_text_data);
@@ -57,6 +56,7 @@ public class AddRoomsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         api = new Api(this);
+        etTextSearch.setHint(R.string.search_hint);
 
         executeLoadRooms();
         initListeners();
@@ -75,6 +75,19 @@ public class AddRoomsActivity extends ActionBarActivity {
                     pbLoad.setVisibility(ProgressBar.VISIBLE);
                 } else {
                     pbLoad.setVisibility(ProgressBar.GONE);
+                }
+            }
+        });
+    }
+
+    private void enableExecutePB(final boolean enable) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (enable) {
+                    pbExecute.setVisibility(ProgressBar.VISIBLE);
+                } else {
+                    pbExecute.setVisibility(ProgressBar.GONE);
                 }
             }
         });
@@ -141,6 +154,7 @@ public class AddRoomsActivity extends ActionBarActivity {
     };
 
     private void existSearch(String text) {
+        enableExecutePB(true);
         api.requestSearchGroups(text, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -155,10 +169,12 @@ public class AddRoomsActivity extends ActionBarActivity {
                         });
                     }
                 }
+                enableExecutePB(true);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                enableExecutePB(true);
             }
         });
     }
