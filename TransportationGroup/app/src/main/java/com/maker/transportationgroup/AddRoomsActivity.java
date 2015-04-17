@@ -143,6 +143,7 @@ public class AddRoomsActivity extends ActionBarActivity {
             if (count > 2) {
                 existSearch(String.valueOf(s));
             } else if (count == 0) {
+                enableExecutePB(false);
                 executeLoadRooms();
             }
         }
@@ -169,12 +170,12 @@ public class AddRoomsActivity extends ActionBarActivity {
                         });
                     }
                 }
-                enableExecutePB(true);
+                enableExecutePB(false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                enableExecutePB(true);
+                enableExecutePB(false);
             }
         });
     }
