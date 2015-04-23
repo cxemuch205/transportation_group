@@ -50,7 +50,12 @@ public class RoomsAdapter extends ArrayAdapter<TGGroup> {
         TGGroup item = data.get(position);
         holder.tvName.setText(item.name);
         holder.tvId.setText(context.getString(R.string.id) + " " + String.valueOf(item.id));
-        holder.tvDescription.setText(item.description);
+        if (item.description != null && !item.description.isEmpty()) {
+            holder.tvDescription.setVisibility(TextView.VISIBLE);
+            holder.tvDescription.setText(item.description);
+        } else {
+            holder.tvDescription.setVisibility(TextView.GONE);
+        }
         holder.tvNumberOfMembers.setText(context.getString(R.string.members) + " "
                 + String.valueOf(item.numberOfMembers));
         holder.tvNumberOfNews.setText(context.getString(R.string.news) + " "

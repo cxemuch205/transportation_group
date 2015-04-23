@@ -14,7 +14,7 @@ public class TGGroup implements Serializable {
     public int id;
     public String name;
     public String key;
-    public String description = "Description";
+    public String description;
     public int numberOfMembers = 0;
     public int numberOfNews = 0;
     public String created_at;
