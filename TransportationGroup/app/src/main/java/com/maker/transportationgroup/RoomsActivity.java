@@ -1,8 +1,8 @@
 package com.maker.transportationgroup;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,15 +17,12 @@ import com.android.volley.VolleyError;
 import com.maker.contenttools.Adapters.RoomsAdapter;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
-import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Models.TGGroup;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 
 
-public class RoomsActivity extends ActionBarActivity {
+public class RoomsActivity extends AppCompatActivity {
 
     public static final String TAG = "RoomsActivity";
 
