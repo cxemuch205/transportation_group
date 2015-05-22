@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
@@ -179,5 +181,29 @@ public class Tools {
             result += (s+"\n");
         }
         return result;
+    }
+
+    public static String getVersionName(Context context) {
+        String versionName = "";
+        try {
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(),
+                    0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+
+    public static String getDeviceId(Context context) {
+        String deviceId = "000000000000000";
+
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            deviceId = telephonyManager.getDeviceId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return deviceId;
     }
 }

@@ -16,11 +16,17 @@ import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.buddy.sdk.Buddy;
+import com.buddy.sdk.BuddyCallback;
+import com.buddy.sdk.BuddyResult;
+import com.buddy.sdk.models.User;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.SignInUp;
+import com.maker.contenttools.Models.TGUser;
+import com.maker.contenttools.PreferencesManager;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
 import com.maker.transportationgroup.RoomsActivity;
@@ -32,7 +38,8 @@ public class SignUpFragment extends Fragment {
 
     public static final String TAG = "SignUpFragment";
 
-    public SignUpFragment() {}
+    public SignUpFragment() {
+    }
 
     private SignInUpCallbacks fragmentCallbacks;
 
@@ -58,8 +65,8 @@ public class SignUpFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (AppCompatActivity) activity;
-        if(((AppCompatActivity) activity).getSupportActionBar() != null)
-        ((AppCompatActivity) activity).getSupportActionBar().setTitle(R.string.register);
+        if (((AppCompatActivity) activity).getSupportActionBar() != null)
+            ((AppCompatActivity) activity).getSupportActionBar().setTitle(R.string.register);
         api = new Api(activity);
     }
 
@@ -102,12 +109,53 @@ public class SignUpFragment extends Fragment {
                     && Tools.isCorrectPassword(etPassword.getText().toString())
                     && Tools.isCorrectPassword(etPasswordConfirmed.getText().toString())
                     && etPassword.getText().toString().equals(etPasswordConfirmed.getText().toString())) {
-                registered();
+                //registered();
+                processRegister();
             } else {
                 Tools.showToastCenter(activity, activity.getString(R.string.field_no_correct));
             }
         }
     };
+
+    private void processRegister() {
+        if (fragmentCallbacks != null) {
+            enableControls(false);
+            fragmentCallbacks.enableProgressBar(true);
+        }
+
+        String email = etEmail.getText().toString();
+        String password = etPassword.getText().toString();
+
+        Buddy.createUser(
+                email,
+                password,
+                null,
+                null,
+                email,
+                null,
+                null,
+                Tools.getDeviceId(activity), new BuddyCallback<User>(User.class) {
+                    @Override
+                    public void completed(BuddyResult<User> result) {
+                        Log.i(TAG, "RESPONSE: \n" + result.getResult());
+                        if (result.getIsSuccess()) {
+                            TGUser user = TGUser.convertUser(result.getResult());
+                            user.accessToken = new PreferencesManager(activity).getRegDeviceData().accessToken;
+
+                            openHome();
+                            Tools.setUserIsRegistered(activity, result.getIsSuccess());
+                            Tools.setUserData(activity, user);
+                        } else {
+                            Tools.showToastCenter(activity, result.getErrorMessage());
+                        }
+
+                        if (fragmentCallbacks != null) {
+                            fragmentCallbacks.enableProgressBar(false);
+                        }
+                        enableControls(true);
+                    }
+                });
+    }
 
     private void registered() {
         if (fragmentCallbacks != null) {
@@ -151,7 +199,8 @@ public class SignUpFragment extends Fragment {
                         Tools.showToastCenter(activity,
                                 Tools.convertArrayToString(apiResponse.errors.full_messages));
                     }
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
                 if (fragmentCallbacks != null) {
                     fragmentCallbacks.enableProgressBar(false);
                 }

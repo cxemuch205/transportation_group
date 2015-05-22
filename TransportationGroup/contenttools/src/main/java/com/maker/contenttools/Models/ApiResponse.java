@@ -15,6 +15,7 @@ public class ApiResponse implements Serializable {
     public String status;
     public Object data;
     public ApiError errors;
+    public Object result;
 
     public boolean isSuccess() {
         return (status != null && status.equals(SUCCESS)) || errors == null;
@@ -23,5 +24,9 @@ public class ApiResponse implements Serializable {
     public static Type getTypeToken() {
         return new TypeToken<ApiResponse>() {
         }.getType();
+    }
+
+    public boolean is201() {
+        return status != null && status.equals("201");
     }
 }

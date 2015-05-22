@@ -1,5 +1,6 @@
 package com.maker.contenttools.Models;
 
+import com.buddy.sdk.models.User;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
@@ -17,5 +18,14 @@ public class TGUser implements Serializable {
 
     public static Type getTypeToken() {
         return new TypeToken<TGUser>(){}.getType();
+    }
+
+    public static TGUser convertUser(User user) {
+        TGUser tgUser = new TGUser();
+
+        tgUser.email = user.userName;
+        tgUser.userId = user.id;
+
+        return tgUser;
     }
 }

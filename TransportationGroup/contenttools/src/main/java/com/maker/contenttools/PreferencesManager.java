@@ -3,7 +3,9 @@ package com.maker.contenttools;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Constants.App;
+import com.maker.contenttools.Models.RegDevice;
 
 /**
  * Created by den4ik on 5/22/15.
@@ -36,5 +38,27 @@ public class PreferencesManager {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(App.Prefs.PROPERTY_APP_VERSION, appVersion);
         editor.apply();
+    }
+
+    public boolean isDeviceRegister() {
+        return preferences.getBoolean(App.Prefs.IS_DEVICE_REGISTERED, false);
+    }
+
+    public void setDeviceRegister(boolean isRegister) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(App.Prefs.IS_DEVICE_REGISTERED, isRegister);
+        editor.apply();
+    }
+
+    public void setRegDeviceData(String data) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(App.Prefs.REG_DEVICE_DATA, data);
+        editor.apply();
+    }
+
+    public RegDevice getRegDeviceData() {
+        return ApiParser.getGson().fromJson(
+                preferences.getString(App.Prefs.REG_DEVICE_DATA, ""),
+                RegDevice.getTypeToken());
     }
 }
