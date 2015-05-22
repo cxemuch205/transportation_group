@@ -53,7 +53,9 @@ public class AddRoomsActivity extends ActionBarActivity {
         tvMessage = (TextView) findViewById(R.id.tv_message);
         etTextSearch = (EditText) findViewById(R.id.et_text_data);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         api = new Api(this);
         etTextSearch.setHint(R.string.search_hint);
@@ -212,46 +214,54 @@ public class AddRoomsActivity extends ActionBarActivity {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "RESPONSE ADD: \n" + response);
-                if (response != null && !response.isEmpty()) {
-                    Tools.showToastCenter(AddRoomsActivity.this, getString(R.string.added));
-                }
+                processReponse(response);
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error != null) {
-                    try {
-                        String response = new String(error.networkResponse.data);
-                        Log.d(TAG, "RESPONSE ERROR: " + response);
-                        ApiResponse apiResponse = ApiParser.getGson()
-                                .fromJson(response,
-                                        ApiResponse.getTypeToken());
-                        if (apiResponse != null && apiResponse.errors != null) {
-                            if (apiResponse.errors.full_messages != null) {
-                                Tools.showToastCenter(AddRoomsActivity.this,
-                                        Tools.convertArrayToString(apiResponse.errors.full_messages));
-                            } else {
-                                Tools.showToastCenter(AddRoomsActivity.this, apiResponse.errors.password);
-                                if (apiResponse.errors.password != null
-                                        && !apiResponse.errors.password.isEmpty()
-                                        && apiResponse.errors.password.equals("incorrect")
-                                        && dialogAuth != null) {
-                                    dialogAuth.show();
-                                } else {
-                                    dialogAuth = null;
-                                }
-                            }
+                processError(error);
+            }
+        });
+    }
+
+    private void processReponse(String response) {
+        Log.d(TAG, "RESPONSE ADD: \n" + response);
+        if (response != null && !response.isEmpty()) {
+            Tools.showToastCenter(AddRoomsActivity.this, getString(R.string.added));
+        }
+    }
+
+    private void processError(VolleyError error) {
+        if (error != null) {
+            try {
+                String response = new String(error.networkResponse.data);
+                Log.d(TAG, "RESPONSE ERROR: " + response);
+                ApiResponse apiResponse = ApiParser.getGson()
+                        .fromJson(response,
+                                ApiResponse.getTypeToken());
+                if (apiResponse != null && apiResponse.errors != null) {
+                    if (apiResponse.errors.full_messages != null) {
+                        Tools.showToastCenter(AddRoomsActivity.this,
+                                Tools.convertArrayToString(apiResponse.errors.full_messages));
+                    } else {
+                        Tools.showToastCenter(AddRoomsActivity.this, apiResponse.errors.password);
+                        if (apiResponse.errors.password != null
+                                && !apiResponse.errors.password.isEmpty()
+                                && apiResponse.errors.password.equals("incorrect")
+                                && dialogAuth != null) {
+                            dialogAuth.show();
                         } else {
                             dialogAuth = null;
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } else {
+                    dialogAuth = null;
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 
     @Override
