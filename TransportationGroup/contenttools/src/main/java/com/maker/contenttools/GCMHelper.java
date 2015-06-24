@@ -1,4 +1,4 @@
-package com.maker.contenttools;
+package nl.oggi.contentapi;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -11,6 +11,9 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Interfaces.GCMHelperCallback;
+import com.maker.contenttools.PreferencesManager;
+import com.maker.contenttools.R;
+import com.maker.contenttools.Tools;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -129,7 +132,7 @@ public class GCMHelper {
                         @Override
                         public void run() {
                             pd.dismiss();
-                            handler.removeCallbacksAndMessages(this);
+                            handler.removeCallbacksAndMessages(null);
                             if (callback != null) {
                                 if (msg.contains("Error")) {
                                     callback.onInitError();
@@ -153,8 +156,7 @@ public class GCMHelper {
 
     private void sendRegistrationIdToBackend(String regId) {
         if (regId != null && !regId.isEmpty()) {
-            //TODO: create request to backend for sending UserDevice RegistrationID
-
+            //No need send, in Oggi need add in every request
         }
     }
 }
