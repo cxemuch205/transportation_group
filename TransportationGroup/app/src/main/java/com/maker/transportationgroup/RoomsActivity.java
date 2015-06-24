@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,9 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.maker.contenttools.Adapters.RoomsAdapter;
+import com.maker.contenttools.Tools;
+import com.maker.contenttools.Views.FloatingActionButton;
+import com.maker.transportationgroup.Adapters.RoomsAdapter;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Models.TGGroup;
@@ -31,6 +34,7 @@ public class RoomsActivity extends AppCompatActivity {
     private TextView tvMessage;
     private RoomsAdapter adapter;
     private Api api;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,23 @@ public class RoomsActivity extends AppCompatActivity {
         tvMessage = (TextView) findViewById(R.id.tv_message);
 
         api = new Api(this);
+        createActionFloatingButton();
+    }
+
+    private void createActionFloatingButton() {
+        floatingActionButton = new FloatingActionButton.Builder(this)
+                .withDrawable(getResources().getDrawable(R.drawable.ic_add_white_24dp))
+                .withButtonColor(getResources().getColor(R.color.floating_btn))
+                .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
+                .withMargins(0, 0, 16, 16)
+                .create();
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addNewGroup = new Intent(RoomsActivity.this, AddRoomsActivity.class);
+                startActivity(addNewGroup);
+            }
+        });
     }
 
     private void initListeners() {
@@ -117,9 +138,9 @@ public class RoomsActivity extends AppCompatActivity {
         }
     };
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_rooms, menu);
+        //getMenuInflater().inflate(R.menu.menu_rooms, menu);
         return true;
     }
 
@@ -134,7 +155,7 @@ public class RoomsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     protected void onResume() {

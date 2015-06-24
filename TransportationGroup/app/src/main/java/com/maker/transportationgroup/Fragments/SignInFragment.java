@@ -83,6 +83,15 @@ public class SignInFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         btnLogin.setOnClickListener(clickLoginListener);
+        //FOR TEST
+        btnLogin.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openHome();
+                return false;
+            }
+        });
+        //$$$$$$$$$
         btnRegister.setOnClickListener(clickRegisterListener);
     }
 

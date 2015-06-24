@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
 
@@ -12,12 +13,15 @@ public class TripsActivity extends AppCompatActivity {
     public static final String TAG = "TripsActivity";
 
     private ProgressBar pbLoad;
+    private ListView lvTrips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trips);
         pbLoad = (ProgressBar) findViewById(R.id.pb_load);
+        lvTrips = (ListView) findViewById(R.id.lv_trips);
+
     }
 
 

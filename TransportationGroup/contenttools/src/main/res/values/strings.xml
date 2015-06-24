@@ -24,4 +24,6 @@
     <string name="create_group_successful">Группа создана успешно!</string>
     <string name="added">Добавлено!</string>
     <string name="search_hint">Введите имя или ид группы</string>
+
+    <color name="floating_btn">#ff464646</color>
 </resources>

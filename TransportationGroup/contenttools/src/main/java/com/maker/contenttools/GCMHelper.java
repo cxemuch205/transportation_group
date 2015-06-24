@@ -1,4 +1,4 @@
-package nl.oggi.contentapi;
+package com.maker.contenttools;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
