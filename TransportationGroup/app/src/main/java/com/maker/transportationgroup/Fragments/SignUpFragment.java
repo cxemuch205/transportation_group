@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,6 @@ import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.R;
-import com.maker.transportationgroup.AddRoomsActivity;
 import com.maker.transportationgroup.RoomsActivity;
 
 /**
@@ -52,14 +51,16 @@ public class SignUpFragment extends Fragment {
 
     private EditText etEmail, etPassword, etPasswordConfirmed;
     private Button btnOpenSignIn, btnRegisterOk;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
     private Api api;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.activity = (ActionBarActivity) activity;
-        ((ActionBarActivity) activity).getSupportActionBar().setTitle(R.string.register);
+        this.activity = (AppCompatActivity) activity;
+        if (this.activity.getSupportActionBar() != null) {
+            this.activity.getSupportActionBar().setTitle(R.string.register);
+        }
         api = new Api(activity);
     }
 

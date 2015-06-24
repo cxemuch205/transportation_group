@@ -33,32 +33,32 @@ public class Api {
 
     public interface Methods {
 
-        public static final String[] SIGN_UP = {"auth"};
-        public static final String[] SIGN_IN = {"auth", "sign_in"};
-        public static final String[] SIGN_OUT = {"auth", "sign_out"};
-        public static final String[] GROUPS = {"api", "groups"};
-        public static final String[] JOIN_TO_GROUP = {"api", "groups", ":id", "join"};
-        public static final String[] MY_GROUPS = {"api", "groups", "own"};
-        public static final String[] SEARCH_GROUPS = {"api", "groups", "search"};
+        String[] SIGN_UP = {"auth"};
+        String[] SIGN_IN = {"auth", "sign_in"};
+        String[] SIGN_OUT = {"auth", "sign_out"};
+        String[] GROUPS = {"api", "groups"};
+        String[] JOIN_TO_GROUP = {"api", "groups", ":id", "join"};
+        String[] MY_GROUPS = {"api", "groups", "own"};
+        String[] SEARCH_GROUPS = {"api", "groups", "search"};
     }
     public interface Fields {
 
-        public static final String EMAIL = "email";
-        public static final String PASSWORD = "password";
-        public static final String PASSWORD_CONFIRMATION = "password_confirmation";
-        public static final String ACCESS_TOKEN = "access-token";
-        public static final String CLIENT = "client";
-        public static final String UID = "uid";
-        public static final String QUERY = "q";
-        public static final String GROUP_NAME = "group[name]";
-        public static final String GROUP_PASSWORD = "group[password]";
-        public static final String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
+        String EMAIL = "email";
+        String PASSWORD = "password";
+        String PASSWORD_CONFIRMATION = "password_confirmation";
+        String ACCESS_TOKEN = "access-token";
+        String CLIENT = "client";
+        String UID = "uid";
+        String QUERY = "q";
+        String GROUP_NAME = "group[name]";
+        String GROUP_PASSWORD = "group[password]";
+        String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
     }
     public interface HeaderKeys {
 
-        public static final String UID = "uid";
-        public static final String CLIENT = "client";
-        public static final String ACCESS_TOKEN = "access-token";
+        String UID = "uid";
+        String CLIENT = "client";
+        String ACCESS_TOKEN = "access-token";
     }
     private Context context;
 

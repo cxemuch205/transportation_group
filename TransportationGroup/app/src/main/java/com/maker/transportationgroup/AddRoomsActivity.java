@@ -2,8 +2,8 @@ package com.maker.transportationgroup;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,7 +30,7 @@ import com.maker.contenttools.Tools;
 import java.util.ArrayList;
 
 
-public class AddRoomsActivity extends ActionBarActivity {
+public class AddRoomsActivity extends AppCompatActivity {
 
     public static final String TAG = "AddRoomsActivity";
     private static final int REQUEST_CREATE_GROUP = 102;

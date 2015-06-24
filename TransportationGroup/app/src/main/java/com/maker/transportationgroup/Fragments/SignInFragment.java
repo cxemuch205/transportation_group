@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,14 +52,15 @@ public class SignInFragment extends Fragment {
 
     private EditText etEmail, etPassword;
     private Button btnLogin, btnRegister;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
     private Api api;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.activity = (ActionBarActivity) activity;
-        ((ActionBarActivity) activity).getSupportActionBar().setTitle(R.string.logged);
+        this.activity = (AppCompatActivity) activity;
+        if(this.activity.getSupportActionBar() != null)
+            this.activity.getSupportActionBar().setTitle(R.string.logged);
         api = new Api(activity);
     }
 

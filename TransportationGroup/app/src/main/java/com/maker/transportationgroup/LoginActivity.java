@@ -3,19 +3,19 @@ package com.maker.transportationgroup;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
 
-import com.maker.contenttools.GCMHelper;
-import com.maker.contenttools.Interfaces.GCMHelperCallback;
+import com.crashlytics.android.Crashlytics;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
 import com.maker.contenttools.Interfaces.SignInUpCallbacksAdapter;
 import com.maker.contenttools.Tools;
 import com.maker.transportationgroup.Fragments.SignInFragment;
 import com.maker.transportationgroup.Fragments.SignUpFragment;
+import io.fabric.sdk.android.Fabric;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity";
 
@@ -24,6 +24,7 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_login);
         pb = (ProgressBar) findViewById(R.id.pb_load);
 
