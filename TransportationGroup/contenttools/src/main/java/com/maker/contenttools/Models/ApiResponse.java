@@ -10,12 +10,14 @@ import java.lang.reflect.Type;
  */
 public class ApiResponse implements Serializable {
 
+    public static final String SUCCESS = "success";
+
     public String status;
     public Object data;
     public ApiError errors;
 
     public boolean isSuccess() {
-        return (status != null && status.equals("success")) || errors == null;
+        return (status != null && status.equals(SUCCESS)) || errors == null;
     }
 
     public static Type getTypeToken() {

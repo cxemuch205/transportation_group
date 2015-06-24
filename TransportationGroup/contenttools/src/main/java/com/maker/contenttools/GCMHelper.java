@@ -2,8 +2,6 @@ package com.maker.contenttools;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -26,7 +24,7 @@ public class GCMHelper {
 
     private static GCMHelper instance;
     private Activity activity;
-    private SharedPreferences prefs;
+    private PreferencesManager preferencesManager;
     private AtomicInteger msgId = new AtomicInteger();
     private GoogleCloudMessaging gcm;
     private String regid;
@@ -37,12 +35,12 @@ public class GCMHelper {
             instance = new GCMHelper();
         }
         instance.activity = activity;
+        instance.preferencesManager = new PreferencesManager(activity);
         return instance;
     }
 
     public void initialUserDevice(GCMHelperCallback callback) {
         this.callback = callback;
-        prefs = activity.getSharedPreferences(App.Prefs.NAME, Context.MODE_PRIVATE);
         if (Tools.checkPlayServices(activity)) {
             gcm = GoogleCloudMessaging.getInstance(activity);
             regid = getRegistrationId(activity);
@@ -62,14 +60,14 @@ public class GCMHelper {
 
     public static String getRegistrationId(Activity activity) {
         String registrationId = getInstance(activity)
-                .prefs.getString(App.Prefs.PROPERTY_REG_ID, "");
+                .preferencesManager.getGCMRegID();
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration id not found.");
             return "";
         }
 
         int registeredVersion = getInstance(activity)
-                .prefs.getInt(App.Prefs.PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+                .preferencesManager.getGCMRegVersion();
         int currentVersion = getAppVersion(activity);
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
@@ -149,10 +147,8 @@ public class GCMHelper {
     private void storeRegistrationId(Activity activity, String regId) {
         int appVersion = getAppVersion(activity);
         Log.i(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(App.Prefs.PROPERTY_REG_ID, regId);
-        editor.putInt(App.Prefs.PROPERTY_APP_VERSION, appVersion);
-        editor.apply();
+        preferencesManager.setGCMRegId(regId);
+        preferencesManager.setGCMRegVersion(appVersion);
     }
 
     private void sendRegistrationIdToBackend(String regId) {

@@ -22,7 +22,9 @@ public class CreateRoomActivity extends AppCompatActivity {
 
     public static final String TAG = "CreateRoomActivity";
 
-    private EditText etName, etPassword, etPasswordConfirmed;
+    private EditText etName,
+            etPassword,
+            etPasswordConfirmed;
     private Button btnCreate;
     private ProgressBar pbLoad;
     private Api api;
@@ -32,7 +34,9 @@ public class CreateRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_room);
         setResult(RESULT_CANCELED);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         api = new Api(this);
 

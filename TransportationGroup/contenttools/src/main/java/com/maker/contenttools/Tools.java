@@ -30,6 +30,8 @@ import java.util.ArrayList;
  */
 public class Tools {
 
+    public static final String TAG = "Tools";
+
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
     public static boolean isCorrectEmail(String email) {
@@ -78,7 +80,7 @@ public class Tools {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, activity,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i("" + activity.getClass().getName(), "This device is not supported.");
+                Log.i(TAG, "This device is not supported.");
                 activity.finish();
             }
             return false;
