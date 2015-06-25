@@ -131,7 +131,10 @@ public class GCMHelper {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (pd != null && pd.isShowing()) {
+                            if (activity != null
+                                    && !activity.isFinishing()
+                                    && pd != null
+                                    && pd.isShowing()) {
                                 pd.dismiss();
                                 pd = null;
                             }
