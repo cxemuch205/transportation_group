@@ -131,7 +131,10 @@ public class GCMHelper {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            pd.dismiss();
+                            if (pd != null && pd.isShowing()) {
+                                pd.dismiss();
+                                pd = null;
+                            }
                             handler.removeCallbacksAndMessages(null);
                             if (callback != null) {
                                 if (msg.contains("Error")) {
