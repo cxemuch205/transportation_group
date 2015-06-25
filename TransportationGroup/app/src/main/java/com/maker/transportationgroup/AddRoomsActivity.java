@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.maker.contenttools.Models.ApiError;
 import com.maker.transportationgroup.Adapters.RoomsAdapter;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
@@ -241,14 +242,14 @@ public class AddRoomsActivity extends AppCompatActivity {
                         .fromJson(response,
                                 ApiResponse.getTypeToken());
                 if (apiResponse != null && apiResponse.errors != null) {
-                    if (apiResponse.errors.full_messages != null) {
+                    if (((ApiError)apiResponse.errors).full_messages != null) {
                         Tools.showToastCenter(AddRoomsActivity.this,
-                                Tools.convertArrayToString(apiResponse.errors.full_messages));
+                                Tools.convertArrayToString(((ApiError)apiResponse.errors).full_messages));
                     } else {
-                        Tools.showToastCenter(AddRoomsActivity.this, apiResponse.errors.password);
-                        if (apiResponse.errors.password != null
-                                && !apiResponse.errors.password.isEmpty()
-                                && apiResponse.errors.password.equals("incorrect")
+                        Tools.showToastCenter(AddRoomsActivity.this, ((ApiError)apiResponse.errors).password);
+                        if (((ApiError)apiResponse.errors).password != null
+                                && !((ApiError)apiResponse.errors).password.isEmpty()
+                                && ((ApiError)apiResponse.errors).password.equals("incorrect")
                                 && dialogAuth != null) {
                             dialogAuth.show();
                         } else {

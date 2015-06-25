@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Interfaces.SignInUpCallbacks;
+import com.maker.contenttools.Models.ApiError;
 import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Tools;
@@ -159,7 +160,7 @@ public class SignUpFragment extends Fragment {
                                     ApiResponse.getTypeToken());
                     if (apiResponse != null) {
                         Tools.showToastCenter(activity,
-                                Tools.convertArrayToString(apiResponse.errors.full_messages));
+                                Tools.convertArrayToString(((ApiError)apiResponse.errors).full_messages));
                     }
                 } catch (Exception e) {}
                 if (fragmentCallbacks != null) {

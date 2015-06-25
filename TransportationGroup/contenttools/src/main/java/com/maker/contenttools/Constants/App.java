@@ -7,7 +7,7 @@ public class App {
 
     public interface Api{
         String SCHEME = "http";
-        String AUTHORITY = "46.101.15.191:80";
+        String AUTHORITY = "45.55.192.95:80";
     }
 
     public interface Prefs{

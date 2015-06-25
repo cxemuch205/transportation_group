@@ -96,9 +96,9 @@ public class GCMHelper {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pd = new ProgressDialog(activity);
-                pd.setMessage(activity.getString(R.string.register_user_device));
-                pd.show();
+                pd = ProgressDialog.show(activity, null, activity.getString(R.string.register_user_device));
+                //pd.setMessage(activity.getString(R.string.register_user_device));
+                //pd.show();
             }
 
             @Override

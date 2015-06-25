@@ -14,7 +14,7 @@ public class ApiResponse implements Serializable {
 
     public String status;
     public Object data;
-    public ApiError errors;
+    public Object errors;
 
     public boolean isSuccess() {
         return (status != null && status.equals(SUCCESS)) || errors == null;

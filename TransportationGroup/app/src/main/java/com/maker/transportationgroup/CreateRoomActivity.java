@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.maker.contenttools.Api.Api;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Constants.App;
+import com.maker.contenttools.Models.ApiError;
 import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Tools;
 
@@ -94,7 +95,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                                         ApiResponse.getTypeToken());
                         if (apiResponse != null) {
                             Tools.showToastCenter(CreateRoomActivity.this,
-                                    Tools.convertArrayToString(apiResponse.errors.full_messages));
+                                    Tools.convertArrayToString(((ApiError)apiResponse.errors).full_messages));
                         }
                     } catch (Exception e) {}
                     enablePB(false);
