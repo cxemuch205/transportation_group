@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Models.TGUser;
+import com.maker.contenttools.PreferencesManager;
 import com.maker.contenttools.Tools;
 
 import org.json.JSONArray;
@@ -40,6 +41,7 @@ public class Api {
         String[] JOIN_TO_GROUP = {"api", "groups", ":id", "join"};
         String[] MY_GROUPS = {"api", "groups", "own"};
         String[] SEARCH_GROUPS = {"api", "groups", "search"};
+        String[] ALL_TRIPS = {"api", "groups", ":id", "trips"};
     }
     public interface Fields {
 
@@ -53,6 +55,7 @@ public class Api {
         String GROUP_NAME = "group[name]";
         String GROUP_PASSWORD = "group[password]";
         String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
+        String DEVICE_DCG_TOKEN = "deviceGCMToken";
     }
     public interface HeaderKeys {
 
@@ -91,6 +94,13 @@ public class Api {
         Log.i(TAG, url);
 
         StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDeviceGCMToken(headers);
+                return headers;
+            }
 
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
@@ -133,6 +143,13 @@ public class Api {
         StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
 
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDeviceGCMToken(headers);
+                return headers;
+            }
+
+            @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
                 if (response.headers != null && !response.headers.isEmpty()) {
                     TGUser user = new TGUser();
@@ -167,7 +184,7 @@ public class Api {
         String url = buildUrl(Methods.SIGN_OUT, null);
         Log.i(TAG, url);
 
-        StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+        StringRequest request = new StringRequest(Request.Method.DELETE, url, responseListener, errorListener) {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -192,6 +209,13 @@ public class Api {
             if (user.userId != null) {
                 headers.put(Fields.UID, user.userId);
             }
+        }
+    }
+
+    private void putDeviceGCMToken(HashMap<String, String> headers) {
+        PreferencesManager preferencesManager = new PreferencesManager(context);
+        if (!preferencesManager.getGCMRegID().isEmpty()) {
+            headers.put(Fields.DEVICE_DCG_TOKEN, preferencesManager.getGCMRegID());
         }
     }
 
@@ -308,6 +332,25 @@ public class Api {
                     params.put(Fields.GROUP_PASSWORD_CONFIRMED, passwordConfirmed);
                 }
                 return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
+    }
+
+    public void requestGetTripsByGroupId(final String groupId, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
+        String url = buildUrl(Methods.ALL_TRIPS, null);
+        if (groupId != null && !groupId.isEmpty()) {
+            url = url.replace(":id", groupId).intern();
+        }
+        Log.i(TAG, url);
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
             }
         };
         request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));

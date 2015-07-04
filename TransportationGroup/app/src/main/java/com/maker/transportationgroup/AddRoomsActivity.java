@@ -211,6 +211,7 @@ public class AddRoomsActivity extends AppCompatActivity {
     };
 
     private void requestAddRoom(Intent data) {
+        enablePB(true);
         api.requestAddGroup(data, new Response.Listener<String>() {
 
             @Override
@@ -231,6 +232,7 @@ public class AddRoomsActivity extends AppCompatActivity {
         if (response != null && !response.isEmpty()) {
             Tools.showToastCenter(AddRoomsActivity.this, getString(R.string.added));
         }
+        enablePB(false);
     }
 
     private void processError(VolleyError error) {
@@ -263,6 +265,7 @@ public class AddRoomsActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        enablePB(false);
     }
 
     @Override

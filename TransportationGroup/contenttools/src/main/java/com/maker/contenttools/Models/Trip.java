@@ -10,15 +10,19 @@ import java.util.ArrayList;
 /**
  * Created by Daniil on 13.02.2015.
  */
-public class Transportation implements Serializable {
+public class Trip implements Serializable {
 
     public String id;
 
     @SerializedName("start_point")
     public Point startPoint;
+    @SerializedName("start_location_id")
+    public int startLocationId;
 
     @SerializedName("end_point")
     public Point endPoint;
+    @SerializedName("end_location_id")
+    public Point endLocationId;
 
     @SerializedName("max_people")
     public int maxPeople;
@@ -107,14 +111,14 @@ public class Transportation implements Serializable {
         this.cost = cost;
     }
 
-    public static Type getItemSerializable() {
-        Type type = new TypeToken<Transportation>() {
+    public static Type getTypeToken() {
+        Type type = new TypeToken<Trip>() {
         }.getType();
         return type;
     }
 
-    public static Type getArraySerializable() {
-        Type type = new TypeToken<ArrayList<Transportation>>() {
+    public static Type getArrayTypeToken() {
+        Type type = new TypeToken<ArrayList<Trip>>() {
         }.getType();
         return type;
     }

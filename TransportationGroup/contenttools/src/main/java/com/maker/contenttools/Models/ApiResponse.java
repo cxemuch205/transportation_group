@@ -15,9 +15,10 @@ public class ApiResponse implements Serializable {
     public String status;
     public Object data;
     public Object errors;
+    public boolean success;
 
     public boolean isSuccess() {
-        return (status != null && status.equals(SUCCESS)) || errors == null;
+        return (status != null && status.equals(SUCCESS)) || errors == null || success;
     }
 
     public static Type getTypeToken() {

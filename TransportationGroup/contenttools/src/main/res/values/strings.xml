@@ -18,6 +18,7 @@
     <string name="id">ИД:</string>
     <string name="news">Новостей:</string>
     <string name="empty_my_rooms">Нет добавленных групп.</string>
+    <string name="empty_trips">Нет поездок.</string>
     <string name="title_dialog_auth_room">Подключение к %s</string>
     <string name="hint_password">Введите пароль</string>
     <string name="empty_field">Не все поля заполнены</string>
