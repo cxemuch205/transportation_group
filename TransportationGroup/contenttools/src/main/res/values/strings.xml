@@ -25,6 +25,19 @@
     <string name="create_group_successful">Группа создана успешно!</string>
     <string name="added">Добавлено!</string>
     <string name="search_hint">Введите имя или ид группы</string>
+    <string name="departure">Отправление:</string>
+    <string name="departure_hint">Откуда</string>
+    <string name="time">Время:</string>
+    <string name="date">Дата:</string>
+    <string name="arrival">Прибытие:</string>
+    <string name="arrival_hint">Куда</string>
+    <string name="type_transportation">Типы перевозки:</string>
+    <string name="type_cargo">Груз</string>
+    <string name="type_docs">Документы</string>
+    <string name="type_people">Люди</string>
+    <string name="max_volume_weight_cargo">Макс. объём/вес груза:</string>
+    <string name="max_people">Макс. кол-во чел:</string>
+    <string name="wait_please">Подождите пожалуйста&#8230;</string>
 
     <color name="floating_btn">#ff464646</color>
 </resources>

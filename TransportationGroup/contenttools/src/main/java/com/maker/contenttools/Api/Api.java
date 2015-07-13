@@ -11,16 +11,14 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Models.TGUser;
+import com.maker.contenttools.Models.Trip;
 import com.maker.contenttools.PreferencesManager;
 import com.maker.contenttools.Tools;
-
-import org.json.JSONArray;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +40,9 @@ public class Api {
         String[] MY_GROUPS = {"api", "groups", "own"};
         String[] SEARCH_GROUPS = {"api", "groups", "search"};
         String[] ALL_TRIPS = {"api", "groups", ":id", "trips"};
+        String[] CREATE_TRIP = {"api", "groups", ":group_id", "trips"};
+        String[] SHOW_TRIP = {"api", "groups", ":group_id", "trips", ":id"};
+
     }
     public interface Fields {
 
@@ -56,6 +57,8 @@ public class Api {
         String GROUP_PASSWORD = "group[password]";
         String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
         String DEVICE_DCG_TOKEN = "deviceGCMToken";
+        String MAX_PEOPLE = "max_people";
+        String MAX_BAGGADE_WEIGHT = "max_baggage_weight";
     }
     public interface HeaderKeys {
 
@@ -351,6 +354,40 @@ public class Api {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 putDefaultHeaderForLoggedUser(headers);
                 return headers;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
+    }
+
+    public void requestCreateTrip(final String groupId, final Trip trip, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
+        if (trip == null) {
+            throw new RuntimeException("Trip not be NULL");
+        }
+        String url = buildUrl(Methods.CREATE_TRIP, null);
+        if (groupId != null && !groupId.isEmpty()) {
+            url = url.replace(":group_id", groupId).intern();
+        }
+        Log.i(TAG, url);
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                if (trip.maxPeople != Trip.NULL) {
+                    params.put(String.format("trip[%s]", Fields.MAX_PEOPLE), String.valueOf(trip.maxPeople));
+                }
+                if (trip.maxWeightBagage != Trip.NULL) {
+                    params.put(String.format("trip[%s]", Fields.MAX_BAGGADE_WEIGHT), String.valueOf(trip.maxWeightBagage));
+                }
+                return params;
             }
         };
         request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));

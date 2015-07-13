@@ -12,6 +12,9 @@
 
     <string name="sign_out">Выход</string>
     <string name="are_you_sure">Вы уверены?</string>
+    <string name="are_you_sure_logout">Вы уверены, то хотите выйти с профиля?</string>
 
     <string name="group_is_empty">Группа не найдена</string>
+    <string name="title_activity_trips">Поездки:</string>
+    <string name="title_activity_create_trip">Создать поездку</string>
 </resources>

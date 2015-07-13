@@ -137,6 +137,7 @@ public class RoomsActivity extends AppCompatActivity {
             if (group != null) {
                 Intent openListTrips = new Intent(RoomsActivity.this, TripsActivity.class);
                 openListTrips.putExtra(App.Keys.ID, String.valueOf(group.id));
+                openListTrips.putExtra(App.Keys.NAME, group.name);
                 startActivity(openListTrips);
             }
         }
@@ -163,7 +164,7 @@ public class RoomsActivity extends AppCompatActivity {
     private void showDialogSignOut() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.sign_out);
-        builder.setMessage(R.string.are_you_sure);
+        builder.setMessage(R.string.are_you_sure_logout);
         builder.setPositiveButton(R.string.action_sign_out, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

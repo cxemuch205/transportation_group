@@ -12,6 +12,8 @@ import java.util.ArrayList;
  */
 public class Trip implements Serializable {
 
+    public static final int NULL = -1;
+
     public String id;
 
     @SerializedName("start_point")
@@ -25,13 +27,13 @@ public class Trip implements Serializable {
     public Point endLocationId;
 
     @SerializedName("max_people")
-    public int maxPeople;
+    public int maxPeople = NULL;
 
     @SerializedName("current_available_people")
     public int currentAvailablePeople;
 
     @SerializedName("max_bagade_weight")
-    public float maxWeightBagage;
+    public float maxWeightBagage = NULL;
 
     @SerializedName("purposes")
     public String purposeTrip;
