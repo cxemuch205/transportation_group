@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +59,8 @@ public class SignInFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = (AppCompatActivity) activity;
-        if(((AppCompatActivity) activity).getSupportActionBar() != null)
-            ((AppCompatActivity) activity)
-                    .getSupportActionBar()
-                    .setTitle(R.string.logged);
+        if(this.activity.getSupportActionBar() != null)
+            this.activity.getSupportActionBar().setTitle(R.string.logged);
         api = new Api(activity);
     }
 
@@ -84,8 +83,30 @@ public class SignInFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         btnLogin.setOnClickListener(clickLoginListener);
+        //FOR TEST
+        btnLogin.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                openHome();
+                return false;
+            }
+        });
+        //$$$$$$$$$
         btnRegister.setOnClickListener(clickRegisterListener);
+        etPassword.setOnKeyListener(keyPasswordListener);
     }
+
+    private View.OnKeyListener keyPasswordListener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                btnLogin.performClick();
+                return true;
+            }
+            return false;
+        }
+    };
 
     private View.OnClickListener clickLoginListener = new View.OnClickListener() {
         @Override
@@ -145,14 +166,23 @@ public class SignInFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 try {
                     String response = new String(error.networkResponse.data);
+                    Log.e(TAG, "DATA: " + response);
                     ApiResponse apiResponse = ApiParser.getGson()
                             .fromJson(response,
                                     ApiResponse.getTypeToken());
                     if (apiResponse != null) {
-                        Tools.showToastCenter(activity,
-                                Tools.convertArrayToString(apiResponse.errors.full_messages));
+                        String msg = String.valueOf(apiResponse.errors);
+                        if (msg != null) {
+                            if (msg.contains("[") && msg.contains("]")) {
+                                msg = msg.replace("[", "").intern();
+                                msg = msg.replace("]", "").intern();
+                            }
+                            Tools.showToastCenter(activity, msg);
+                        }
                     }
-                } catch (Exception e) {}
+                } catch (Exception e) {
+
+                }
                 enableControls(true);
                 if (fragmentCallbacks != null) {
                     fragmentCallbacks.enableProgressBar(false);

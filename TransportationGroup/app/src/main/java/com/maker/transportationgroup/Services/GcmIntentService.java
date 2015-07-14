@@ -6,27 +6,27 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.maker.contenttools.Constants.App;
 import com.maker.transportationgroup.R;
 import com.maker.transportationgroup.Receivers.GcmBroadcastReceiver;
-import com.maker.transportationgroup.AddRoomsActivity;
 
 /**
  * Created by Daniil on 25-Mar-15.
  */
 public class GcmIntentService extends IntentService {
+
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
+    private NotificationCompat.Builder builder;
 
     public GcmIntentService() {
         super("GcmIntentServiceTransportationGroup");
     }
-    public static final String TAG = "GCM Demo";
+    public static final String TAG = "GCM Oggi.nl";
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -43,23 +43,22 @@ public class GcmIntentService extends IntentService {
              * not interested in, or that you don't recognize.
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+                sendNotification(extras);
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
+                sendNotification(extras);
                 // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // This loop represents the service doing some work.
-                for (int i = 0; i < 5; i++) {
+                /*for (int i = 0; i < 5; i++) {
                     Log.i(TAG, "Working... " + (i + 1)
                             + "/5 @ " + SystemClock.elapsedRealtime());
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
                     }
-                }
-                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+                }*/
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                sendNotification(extras);
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }
@@ -70,22 +69,53 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String msg) {
-        mNotificationManager = (NotificationManager)
-                this.getSystemService(Context.NOTIFICATION_SERVICE);
+    private void sendNotification(Bundle data) {
+        if (data != null) {
+            //TODO: make data execute and show notification
+            /*String msg = "";
+            int id = -1;
+            int type = -1;
+            if(data.containsKey(App.Extras.MESSAGE))
+                msg = data.getString(App.Extras.MESSAGE);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, AddRoomsActivity.class), 0);
+            if (data.containsKey(App.Extras.ID)) {
+                id = Integer.parseInt(String.valueOf(data.get(App.Extras.ID)));
+            }
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(getString(R.string.title_notification))
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(msg))
-                        .setContentText(msg);
+            if(data.containsKey(App.Extras.TYPE)) {
+                type = Integer.parseInt(String.valueOf(data.get(App.Extras.TYPE)));
+            }
 
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            mNotificationManager = (NotificationManager)
+                    this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+            Intent intentData;
+
+            if (type == GCMType.OUTING) {
+                intentData = new Intent(this, OutingDetailActivity.class);
+                Outing outing = new Outing(String.valueOf(id));
+                intentData.putExtra(App.Extras.OBJECT, outing);
+                intentData.putExtra(App.Extras.TRACKER, true);
+            } else {
+                intentData = new Intent(this, ActionDetailActivity.class);
+                intentData.putExtra(App.Extras.ID, id);
+                intentData.putExtra(App.Extras.TRACKER, true);
+            }
+
+
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                    intentData, 0);
+
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.icon_logo)
+                            .setContentTitle(getString(R.string.app_name))
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(msg))
+                            .setContentText(msg);
+
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());*/
+        }
     }
 }

@@ -15,11 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.maker.contenttools.Api.ApiParser;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Interfaces.OnDialogListener;
+import com.maker.contenttools.Models.ApiError;
+import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Models.TGGroup;
 import com.maker.contenttools.Models.TGUser;
 
@@ -93,6 +96,12 @@ public class Tools {
 
         String userData = ApiParser.getGson().toJson(user, TGUser.getTypeToken());
         prefs.edit().putString(App.Prefs.USER_INFO, userData).apply();
+    }
+
+    public static void dropUserData(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(App.Prefs.NAME, Context.MODE_PRIVATE);
+
+        prefs.edit().remove(App.Prefs.USER_INFO).apply();
     }
 
     public static TGUser getUserData(Context context) {
@@ -179,5 +188,27 @@ public class Tools {
             result += (s+"\n");
         }
         return result;
+    }
+
+    public static void processError(Context context, VolleyError error) {
+        if (error != null) {
+            try {
+                String response = new String(error.networkResponse.data);
+                Log.d(TAG, "RESPONSE ERROR: " + response);
+                ApiResponse apiResponse = ApiParser.getGson()
+                        .fromJson(response,
+                                ApiResponse.getTypeToken());
+                if (apiResponse != null && apiResponse.errors != null) {
+                    if (((ApiError)apiResponse.errors).full_messages != null) {
+                        showToastCenter(context,
+                                convertArrayToString(((ApiError)apiResponse.errors).full_messages));
+                    } else {
+                        showToastCenter(context, ((ApiError)apiResponse.errors).password);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

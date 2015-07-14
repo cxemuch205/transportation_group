@@ -11,15 +11,14 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Models.SignInUp;
 import com.maker.contenttools.Models.TGUser;
+import com.maker.contenttools.Models.Trip;
+import com.maker.contenttools.PreferencesManager;
 import com.maker.contenttools.Tools;
-
-import org.json.JSONArray;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,32 +32,39 @@ public class Api {
 
     public interface Methods {
 
-        public static final String[] SIGN_UP = {"auth"};
-        public static final String[] SIGN_IN = {"auth", "sign_in"};
-        public static final String[] SIGN_OUT = {"auth", "sign_out"};
-        public static final String[] GROUPS = {"api", "groups"};
-        public static final String[] JOIN_TO_GROUP = {"api", "groups", ":id", "join"};
-        public static final String[] MY_GROUPS = {"api", "groups", "own"};
-        public static final String[] SEARCH_GROUPS = {"api", "groups", "search"};
+        String[] SIGN_UP = {"auth"};
+        String[] SIGN_IN = {"auth", "sign_in"};
+        String[] SIGN_OUT = {"auth", "sign_out"};
+        String[] GROUPS = {"api", "groups"};
+        String[] JOIN_TO_GROUP = {"api", "groups", ":id", "join"};
+        String[] MY_GROUPS = {"api", "groups", "own"};
+        String[] SEARCH_GROUPS = {"api", "groups", "search"};
+        String[] ALL_TRIPS = {"api", "groups", ":id", "trips"};
+        String[] CREATE_TRIP = {"api", "groups", ":group_id", "trips"};
+        String[] SHOW_TRIP = {"api", "groups", ":group_id", "trips", ":id"};
+
     }
     public interface Fields {
 
-        public static final String EMAIL = "email";
-        public static final String PASSWORD = "password";
-        public static final String PASSWORD_CONFIRMATION = "password_confirmation";
-        public static final String ACCESS_TOKEN = "access-token";
-        public static final String CLIENT = "client";
-        public static final String UID = "uid";
-        public static final String QUERY = "q";
-        public static final String GROUP_NAME = "group[name]";
-        public static final String GROUP_PASSWORD = "group[password]";
-        public static final String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
+        String EMAIL = "email";
+        String PASSWORD = "password";
+        String PASSWORD_CONFIRMATION = "password_confirmation";
+        String ACCESS_TOKEN = "access-token";
+        String CLIENT = "client";
+        String UID = "uid";
+        String QUERY = "q";
+        String GROUP_NAME = "group[name]";
+        String GROUP_PASSWORD = "group[password]";
+        String GROUP_PASSWORD_CONFIRMED = "group[password_confirmation]";
+        String DEVICE_DCG_TOKEN = "deviceGCMToken";
+        String MAX_PEOPLE = "max_people";
+        String MAX_BAGGADE_WEIGHT = "max_baggage_weight";
     }
     public interface HeaderKeys {
 
-        public static final String UID = "uid";
-        public static final String CLIENT = "client";
-        public static final String ACCESS_TOKEN = "access-token";
+        String UID = "uid";
+        String CLIENT = "client";
+        String ACCESS_TOKEN = "access-token";
     }
     private Context context;
 
@@ -91,6 +97,13 @@ public class Api {
         Log.i(TAG, url);
 
         StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDeviceGCMToken(headers);
+                return headers;
+            }
 
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
@@ -133,6 +146,13 @@ public class Api {
         StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
 
             @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDeviceGCMToken(headers);
+                return headers;
+            }
+
+            @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
                 if (response.headers != null && !response.headers.isEmpty()) {
                     TGUser user = new TGUser();
@@ -167,7 +187,7 @@ public class Api {
         String url = buildUrl(Methods.SIGN_OUT, null);
         Log.i(TAG, url);
 
-        StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+        StringRequest request = new StringRequest(Request.Method.DELETE, url, responseListener, errorListener) {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -192,6 +212,13 @@ public class Api {
             if (user.userId != null) {
                 headers.put(Fields.UID, user.userId);
             }
+        }
+    }
+
+    private void putDeviceGCMToken(HashMap<String, String> headers) {
+        PreferencesManager preferencesManager = new PreferencesManager(context);
+        if (!preferencesManager.getGCMRegID().isEmpty()) {
+            headers.put(Fields.DEVICE_DCG_TOKEN, preferencesManager.getGCMRegID());
         }
     }
 
@@ -306,6 +333,59 @@ public class Api {
                 }
                 if (passwordConfirmed != null) {
                     params.put(Fields.GROUP_PASSWORD_CONFIRMED, passwordConfirmed);
+                }
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
+    }
+
+    public void requestGetTripsByGroupId(final String groupId, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
+        String url = buildUrl(Methods.ALL_TRIPS, null);
+        if (groupId != null && !groupId.isEmpty()) {
+            url = url.replace(":id", groupId).intern();
+        }
+        Log.i(TAG, url);
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(5000, 1, 1f));
+        requestQueue.add(request);
+    }
+
+    public void requestCreateTrip(final String groupId, final Trip trip, Response.Listener<String> responseListener, Response.ErrorListener errorListener) {
+        if (trip == null) {
+            throw new RuntimeException("Trip not be NULL");
+        }
+        String url = buildUrl(Methods.CREATE_TRIP, null);
+        if (groupId != null && !groupId.isEmpty()) {
+            url = url.replace(":group_id", groupId).intern();
+        }
+        Log.i(TAG, url);
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, responseListener, errorListener) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                putDefaultHeaderForLoggedUser(headers);
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                if (trip.maxPeople != Trip.NULL) {
+                    params.put(String.format("trip[%s]", Fields.MAX_PEOPLE), String.valueOf(trip.maxPeople));
+                }
+                if (trip.maxWeightBagage != Trip.NULL) {
+                    params.put(String.format("trip[%s]", Fields.MAX_BAGGADE_WEIGHT), String.valueOf(trip.maxWeightBagage));
                 }
                 return params;
             }

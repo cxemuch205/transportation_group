@@ -11,6 +11,9 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Interfaces.GCMHelperCallback;
+import com.maker.contenttools.PreferencesManager;
+import com.maker.contenttools.R;
+import com.maker.contenttools.Tools;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -93,9 +96,9 @@ public class GCMHelper {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pd = new ProgressDialog(activity);
-                pd.setMessage(activity.getString(R.string.register_user_device));
-                pd.show();
+                pd = ProgressDialog.show(activity, null, activity.getString(R.string.register_user_device));
+                //pd.setMessage(activity.getString(R.string.register_user_device));
+                //pd.show();
             }
 
             @Override
@@ -128,8 +131,14 @@ public class GCMHelper {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            pd.dismiss();
-                            handler.removeCallbacksAndMessages(this);
+                            if (activity != null
+                                    && !activity.isFinishing()
+                                    && pd != null
+                                    && pd.isShowing()) {
+                                pd.dismiss();
+                                pd = null;
+                            }
+                            handler.removeCallbacksAndMessages(null);
                             if (callback != null) {
                                 if (msg.contains("Error")) {
                                     callback.onInitError();
@@ -153,8 +162,7 @@ public class GCMHelper {
 
     private void sendRegistrationIdToBackend(String regId) {
         if (regId != null && !regId.isEmpty()) {
-            //TODO: create request to backend for sending UserDevice RegistrationID
-
+            //No need send, in Oggi need add in every request
         }
     }
 }
