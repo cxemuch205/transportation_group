@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Transportation Group</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Transporter</string>
+    <string name="title_activity_rooms">Группы</string>
+    <string name="title_activity_add_room">Добавить группу</string>
 
+    <string name="action_add_room">Добавить группу</string>
+    <string name="action_sign_out">Выйти</string>
+    <string name="action_create_room">Создать группу</string>
+    <string name="title_activity_create_room">Создание группы</string>
+
+<<<<<<< HEAD
+    <string name="title_notification">Новости</string>
+
+=======
+    <string name="sign_out">Выход</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="are_you_sure_logout">Вы уверены, то хотите выйти с профиля?</string>
+
+    <string name="group_is_empty">Группа не найдена</string>
+    <string name="title_activity_trips">Поездки:</string>
+    <string name="title_activity_create_trip">Создать поездку</string>
+>>>>>>> d07964153a1a1f7f12128e77a1da5f653b891b99
 </resources>

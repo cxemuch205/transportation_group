@@ -2,19 +2,75 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.maker.transportationgroup" >
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <permission
+        android:name="com.maker.transportationgroup.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.maker.transportationgroup.permission.C2D_MESSAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!-- Required for applications which use Google Play Services. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="sensorPortrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".AddRoomsActivity"
+            android:label="@string/title_activity_add_room"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".RoomsActivity"
+            android:label="@string/title_activity_rooms"
+            android:screenOrientation="sensorPortrait" />
+
+        <receiver
+            android:name=".Receivers.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.maker.transportationgroup" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".CreateRoomActivity"
+            android:label="@string/title_activity_create_room"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".TripsActivity"
+            android:screenOrientation="sensorPortrait"
+            android:label="@string/title_activity_trips"  />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="251d1d8b11ac1620c3f23a5b087cb9f33962e456" />
+
+        <activity
+            android:name=".CreateTripActivity"
+            android:label="@string/title_activity_create_trip" >
         </activity>
     </application>
 
