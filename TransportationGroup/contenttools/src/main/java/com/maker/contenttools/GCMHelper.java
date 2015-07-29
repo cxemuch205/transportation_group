@@ -11,9 +11,6 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.maker.contenttools.Constants.App;
 import com.maker.contenttools.Interfaces.GCMHelperCallback;
-import com.maker.contenttools.PreferencesManager;
-import com.maker.contenttools.R;
-import com.maker.contenttools.Tools;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
