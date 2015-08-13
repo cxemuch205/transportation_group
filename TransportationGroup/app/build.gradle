@@ -38,6 +38,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:design:22.2.0'
     compile project (':contenttools')
     compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true;

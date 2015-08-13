@@ -19,9 +19,9 @@ import com.maker.contenttools.Models.ApiResponse;
 import com.maker.contenttools.Tools;
 
 
-public class CreateRoomActivity extends AppCompatActivity {
+public class CreateGroupActivity extends AppCompatActivity {
 
-    public static final String TAG = "CreateRoomActivity";
+    public static final String TAG = "CreateGroupActivity";
 
     private EditText etName,
             etPassword,
@@ -79,7 +79,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     if (response != null && !response.isEmpty()) {
-                        Tools.showToastCenter(CreateRoomActivity.this, getString(R.string.create_group_successful));
+                        Tools.showToastCenter(CreateGroupActivity.this, getString(R.string.create_group_successful));
                         setResult(RESULT_OK);
                         finish();
                     }
@@ -94,7 +94,7 @@ public class CreateRoomActivity extends AppCompatActivity {
                                 .fromJson(response,
                                         ApiResponse.getTypeToken());
                         if (apiResponse != null) {
-                            Tools.showToastCenter(CreateRoomActivity.this,
+                            Tools.showToastCenter(CreateGroupActivity.this,
                                     Tools.convertArrayToString(((ApiError)apiResponse.errors).full_messages));
                         }
                     } catch (Exception e) {}

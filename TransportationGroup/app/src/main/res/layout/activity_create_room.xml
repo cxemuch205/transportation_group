@@ -5,68 +5,84 @@
     tools:context="com.maker.transportationgroup.Fragments.SignInFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
 
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/et_name"
             android:layout_margin="8dp"
-            android:singleLine="true"
-            android:hint="@string/name_hint" />
+            android:layout_height="wrap_content">
 
-        <EditText
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/name_hint"
+                android:inputType="textEmailAddress"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/et_password"
-            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:hint="@string/password_hint" />
+            android:layout_height="wrap_content">
 
-        <EditText
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="10"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/et_password_confirmed"
-            android:layout_gravity="center_horizontal"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:hint="@string/password_confirmed_hint" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/et_password_confirmed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ems="10"
+                android:hint="@string/password_confirmed_hint"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="horizontal"
             android:padding="8dp">
 
             <Button
+                android:id="@+id/btn_create"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create"
-                android:id="@+id/btn_create"
+                android:layout_marginLeft="2dp"
                 android:layout_weight="1"
-                android:layout_marginLeft="2dp" />
+                android:text="@string/create" />
 
         </LinearLayout>
 
     </LinearLayout>
 
     <ProgressBar
+        android:id="@+id/pb_load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/pb_load"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:indeterminate="false"
         android:visibility="gone" />
 </RelativeLayout>

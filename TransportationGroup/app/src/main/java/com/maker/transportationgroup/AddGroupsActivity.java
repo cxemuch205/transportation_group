@@ -31,9 +31,9 @@ import com.maker.contenttools.Tools;
 import java.util.ArrayList;
 
 
-public class AddRoomsActivity extends AppCompatActivity {
+public class AddGroupsActivity extends AppCompatActivity {
 
-    public static final String TAG = "AddRoomsActivity";
+    public static final String TAG = "AddGroupsActivity";
     private static final int REQUEST_CREATE_GROUP = 102;
 
     private ProgressBar pbLoad, pbExecute;
@@ -188,7 +188,7 @@ public class AddRoomsActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             TGGroup room = adapter.getItem(position);
             if (room != null) {
-                dialogAuth = Tools.buildDialogAuthRoom(AddRoomsActivity.this, room, dialogCallback);
+                dialogAuth = Tools.buildDialogAuthRoom(AddGroupsActivity.this, room, dialogCallback);
                 dialogAuth.show();
             }
         }
@@ -230,7 +230,7 @@ public class AddRoomsActivity extends AppCompatActivity {
     private void processReponse(String response) {
         Log.d(TAG, "RESPONSE ADD: \n" + response);
         if (response != null && !response.isEmpty()) {
-            Tools.showToastCenter(AddRoomsActivity.this, getString(R.string.added));
+            Tools.showToastCenter(AddGroupsActivity.this, getString(R.string.added));
         }
         enablePB(false);
     }
@@ -245,10 +245,10 @@ public class AddRoomsActivity extends AppCompatActivity {
                                 ApiResponse.getTypeToken());
                 if (apiResponse != null && apiResponse.errors != null) {
                     if (((ApiError)apiResponse.errors).full_messages != null) {
-                        Tools.showToastCenter(AddRoomsActivity.this,
+                        Tools.showToastCenter(AddGroupsActivity.this,
                                 Tools.convertArrayToString(((ApiError)apiResponse.errors).full_messages));
                     } else {
-                        Tools.showToastCenter(AddRoomsActivity.this, ((ApiError)apiResponse.errors).password);
+                        Tools.showToastCenter(AddGroupsActivity.this, ((ApiError)apiResponse.errors).password);
                         if (((ApiError)apiResponse.errors).password != null
                                 && !((ApiError)apiResponse.errors).password.isEmpty()
                                 && ((ApiError)apiResponse.errors).password.equals("incorrect")
@@ -279,7 +279,7 @@ public class AddRoomsActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_create_room:
-                Intent createNewGroup = new Intent(this, CreateRoomActivity.class);
+                Intent createNewGroup = new Intent(this, CreateGroupActivity.class);
                 startActivityForResult(createNewGroup, REQUEST_CREATE_GROUP);
                 break;
             case android.R.id.home:

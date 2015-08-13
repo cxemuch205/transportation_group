@@ -62,7 +62,7 @@ public class RoomsActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addNewGroup = new Intent(RoomsActivity.this, AddRoomsActivity.class);
+                Intent addNewGroup = new Intent(RoomsActivity.this, AddGroupsActivity.class);
                 startActivity(addNewGroup);
             }
         });

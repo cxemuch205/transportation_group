@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddRoomsActivity"
+            android:name=".AddGroupsActivity"
             android:label="@string/title_activity_add_room"
             android:screenOrientation="sensorPortrait" />
         <activity
@@ -56,7 +56,7 @@
         </receiver>
 
         <activity
-            android:name=".CreateRoomActivity"
+            android:name=".CreateGroupActivity"
             android:label="@string/title_activity_create_room"
             android:screenOrientation="sensorPortrait" />
         <activity
